@@ -4,3 +4,4 @@
 #include "Player.h"
 #include "Splash.h"
 #include "Title.h"
+#include "Puzzles.h"
