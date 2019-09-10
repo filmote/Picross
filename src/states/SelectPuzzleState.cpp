@@ -63,7 +63,8 @@ void SelectPuzzleState::update(StateMachine & machine) {
 
     for (uint8_t y = 0; y < height; y++){
 
-      uint8_t series[6] = { 0, 0, 0, 0, 0, 0 };
+      uint8_t series[Constants::NumberOfNumbers];
+      memset(series, 0, Constants::NumberOfNumbers);
       int8_t seriesIdx = -1;
 
       uint8_t lastData = 0;
@@ -76,7 +77,7 @@ void SelectPuzzleState::update(StateMachine & machine) {
 
           if (data == static_cast<uint8_t>(GridValue::SelectedInImage)) {
             seriesIdx++;
-            if (seriesIdx == 5) break;
+            if (seriesIdx == Constants::NumberOfNumbers) break;
           }
           lastData = data;
 
@@ -89,10 +90,10 @@ void SelectPuzzleState::update(StateMachine & machine) {
       }
 
 
-      for (uint8_t z = 0; z < 6; z++){
+      for (uint8_t z = 0; z < Constants::NumberOfNumbers; z++){
 
         if (series[z] > 0 && maxSeriesRow < z + 1) maxSeriesRow = z + 1;
-        EEPROM.update(Constants::PuzzleRows + (y * 6) + z, series[z]);
+        EEPROM.update(Constants::PuzzleRows + (y * Constants::NumberOfNumbers) + z, series[z]);
 
       }
 
@@ -103,7 +104,8 @@ void SelectPuzzleState::update(StateMachine & machine) {
     
     for (uint8_t x = 0; x < width; x++){
 
-      uint8_t series[6] = { 0, 0, 0, 0, 0, 0 };
+      uint8_t series[Constants::NumberOfNumbers];
+      memset(series, 0, Constants::NumberOfNumbers);
       int8_t seriesIdx = -1;
 
       uint8_t lastData = 0;
@@ -116,7 +118,7 @@ void SelectPuzzleState::update(StateMachine & machine) {
 
           if (data == static_cast<uint8_t>(GridValue::SelectedInImage)) {
             seriesIdx++;
-            if (seriesIdx == 5) break;
+            if (seriesIdx == Constants::NumberOfNumbers) break;
           }
           lastData = data;
 
@@ -128,10 +130,10 @@ void SelectPuzzleState::update(StateMachine & machine) {
 
       }
 
-      for (uint8_t z = 0; z < 6; z++){
+      for (uint8_t z = 0; z < Constants::NumberOfNumbers; z++){
 
         if (series[z] > 0 && maxSeriesCol < z + 1) maxSeriesCol = z + 1;
-        EEPROM.update(Constants::PuzzleCols + (x * 6) + z, series[z]);
+        EEPROM.update(Constants::PuzzleCols + (x * Constants::NumberOfNumbers) + z, series[z]);
 
       }
 

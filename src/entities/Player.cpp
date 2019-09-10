@@ -40,13 +40,13 @@ GridValue Player::getGrid(uint8_t x, uint8_t y) {
 
 uint8_t Player::getCol(uint8_t col, uint8_t index) {
 
-  return EEPROM.read(Constants::PuzzleCols + (col * 6) + index);
+  return EEPROM.read(Constants::PuzzleCols + (col * Constants::NumberOfNumbers) + index);
 
 }
 
 uint8_t Player::getRow(uint8_t row, uint8_t index) {
 
-  return EEPROM.read(Constants::PuzzleRows + (row * 6) + index);
+  return EEPROM.read(Constants::PuzzleRows + (row * Constants::NumberOfNumbers) + index);
 
 }
 
@@ -86,13 +86,13 @@ void Player::setGrid(uint8_t x, uint8_t y, GridValue value) {
 
 void Player::setCol(uint8_t col, uint8_t index, uint8_t value) {
   
-  EEPROM.update(Constants::PuzzleCols + (col * 6) + index, value);
+  EEPROM.update(Constants::PuzzleCols + (col * Constants::NumberOfNumbers) + index, value);
 
 }
 
 void Player::setRow(uint8_t row, uint8_t index, uint8_t value) {
   
-  EEPROM.update(Constants::PuzzleRows + (row * 6) + index, value);
+  EEPROM.update(Constants::PuzzleRows + (row * Constants::NumberOfNumbers) + index, value);
 
 }
 
@@ -122,9 +122,9 @@ void Player::decY() {
 
 bool Player::isColMatch(uint8_t col) {
 
-  for (uint8_t z = 0; z < 5; z++) {
+  for (uint8_t z = 0; z < Constants::NumberOfNumbers; z++) {
 
-    if (EEPROM.read(Constants::PuzzleCols + (col * 6) + z) != this->cols[(col * 6) + z]) {
+    if (EEPROM.read(Constants::PuzzleCols + (col * Constants::NumberOfNumbers) + z) != this->cols[(col * Constants::NumberOfNumbers) + z]) {
       return false;
     }
 
@@ -136,9 +136,9 @@ bool Player::isColMatch(uint8_t col) {
 
 bool Player::isRowMatch(uint8_t row) {
 
-  for (uint8_t z = 0; z < 5; z++) {
+  for (uint8_t z = 0; z < Constants::NumberOfNumbers; z++) {
 
-    if (EEPROM.read(Constants::PuzzleRows + (row * 6) + z) != this->rows[(row * 6) + z]) {
+    if (EEPROM.read(Constants::PuzzleRows + (row * Constants::NumberOfNumbers) + z) != this->rows[(row * Constants::NumberOfNumbers) + z]) {
       return false;
     }
 
@@ -159,7 +159,8 @@ void Player::updateRowCols() {
 
   for (uint8_t y = 0; y < height; y++){
 
-    uint8_t series[6] = { 0, 0, 0, 0, 0, 0 };
+    uint8_t series[Constants::NumberOfNumbers];
+    memset(series, 0, Constants::NumberOfNumbers);
     int8_t seriesIdx = -1;
 
     uint8_t lastData = 0;
@@ -172,7 +173,7 @@ void Player::updateRowCols() {
 
         if (data == static_cast<uint8_t>(GridValue::Selected)) {
           seriesIdx++;
-          if (seriesIdx == 5) break;
+          if (seriesIdx == Constants::NumberOfNumbers) break;
         }
         lastData = data;
 
@@ -184,9 +185,9 @@ void Player::updateRowCols() {
 
     }
 
-    for (uint8_t z = 0; z < 6; z++){
+    for (uint8_t z = 0; z < Constants::NumberOfNumbers; z++){
 
-      this->rows[(y * 6) + z] = series[z];
+      this->rows[(y * Constants::NumberOfNumbers) + z] = series[z];
 
     }
 
@@ -197,7 +198,8 @@ void Player::updateRowCols() {
   
   for (uint8_t x = 0; x < width; x++){
 
-    uint8_t series[6] = { 0, 0, 0, 0, 0, 0 };
+    uint8_t series[Constants::NumberOfNumbers];
+    memset(series, 0, Constants::NumberOfNumbers);
     int8_t seriesIdx = -1;
 
     uint8_t lastData = 0;
@@ -210,7 +212,7 @@ void Player::updateRowCols() {
 
         if (data == static_cast<uint8_t>(GridValue::Selected)) {
           seriesIdx++;
-          if (seriesIdx == 5) break;
+          if (seriesIdx == Constants::NumberOfNumbers) break;
         }
         lastData = data;
 
@@ -221,9 +223,9 @@ void Player::updateRowCols() {
 
     }
 
-    for (uint8_t z = 0; z < 6; z++){
+    for (uint8_t z = 0; z < Constants::NumberOfNumbers; z++){
 
-      this->cols[(x * 6) + z] = series[z];
+      this->cols[(x * Constants::NumberOfNumbers) + z] = series[z];
 
     }
 
