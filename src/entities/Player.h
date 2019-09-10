@@ -29,8 +29,9 @@ class Player {
     void incY();
     void decY();
 
-    bool isColMatch(uint8_t col, uint8_t match01, uint8_t match02, uint8_t match03, uint8_t match04, uint8_t match05);
-    bool isRowMatch(uint8_t row, uint8_t match01, uint8_t match02, uint8_t match03, uint8_t match04, uint8_t match05);
+    bool isColMatch(uint8_t col);
+    bool isRowMatch(uint8_t row);
+    void updateRowCols();
 
   private:
 
@@ -39,7 +40,7 @@ class Player {
 
     uint8_t x = 0;
     uint8_t y = 0;
-    uint8_t cols[12][5];
-    uint8_t rows[12][5];
+    uint8_t rows[90];
+    uint8_t cols[90];
 
 };

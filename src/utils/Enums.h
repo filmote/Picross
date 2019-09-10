@@ -15,4 +15,5 @@ enum class GridValue : uint8_t {
 	Blank,
 	Selected,
   Marked,
+	SelectedInImage = 16
 };

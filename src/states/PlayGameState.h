@@ -22,6 +22,12 @@ class PlayGameState : public BaseState {
 
   private:
 
+    uint8_t maxSeriesRow = 0;
+    uint8_t maxSeriesCol = 0;
+
+    uint8_t marginTop = 0;
+    uint8_t marginLeft = 0;
+
 
 };
 

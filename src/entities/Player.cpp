@@ -23,35 +23,35 @@ uint8_t Player::getY() {
 GridValue Player::getGrid() {
 
   uint8_t width = EEPROM.read(Constants::PuzzleWidth);
-  uint8_t height = EEPROM.read(Constants::PuzzleHeight);
+  uint8_t val = EEPROM.read(Constants::PuzzleStart + (this->y * width) + (this->x)) & 0x0f;
 
-  return static_cast<GridValue>(EEPROM.read(Constants::PuzzleStart + (this->y * width) + (this->x)));
+  return static_cast<GridValue>(val);
 
 }
 
 GridValue Player::getGrid(uint8_t x, uint8_t y) {
 
   uint8_t width = EEPROM.read(Constants::PuzzleWidth);
-  uint8_t height = EEPROM.read(Constants::PuzzleHeight);
+  uint8_t val = EEPROM.read(Constants::PuzzleStart + (y * width) + x) & 0x0f;
 
-  return static_cast<GridValue>(EEPROM.read(Constants::PuzzleStart + (y * width) + x));
+  return static_cast<GridValue>(val);
 
 }
 
 uint8_t Player::getCol(uint8_t col, uint8_t index) {
 
-  return this->cols[col][index];
+  return EEPROM.read(Constants::PuzzleCols + (col * 6) + index);
 
 }
 
 uint8_t Player::getRow(uint8_t row, uint8_t index) {
 
-  return this->rows[row][index];
+  return EEPROM.read(Constants::PuzzleRows + (row * 6) + index);
 
 }
 
 void Player::setX(uint8_t value) {
-  
+
   this->x = value;
   
 }
@@ -65,30 +65,34 @@ void Player::setY(uint8_t value) {
 void Player::setGrid(GridValue value) {
 
   uint8_t width = EEPROM.read(Constants::PuzzleWidth);
-  uint8_t height = EEPROM.read(Constants::PuzzleHeight);
+  uint16_t memLoc = Constants::PuzzleStart + (this->y * width) + x;
+  uint8_t update = (EEPROM.read(memLoc) & static_cast<uint8_t>(GridValue::SelectedInImage)) | static_cast<uint8_t>(value);
 
-  EEPROM.update(Constants::PuzzleStart + (this->y * width) + x, static_cast<uint8_t>(value));
+  EEPROM.update(memLoc, static_cast<uint8_t>(update));
+
+  this->updateRowCols();
 
 }
 
 void Player::setGrid(uint8_t x, uint8_t y, GridValue value) {
 
   uint8_t width = EEPROM.read(Constants::PuzzleWidth);
-  uint8_t height = EEPROM.read(Constants::PuzzleHeight);
 
   EEPROM.update(Constants::PuzzleStart + (y * width) + x, static_cast<uint8_t>(value));
+
+  this->updateRowCols();
 
 }
 
 void Player::setCol(uint8_t col, uint8_t index, uint8_t value) {
-
-  this->cols[col][index] = value;
+  
+  EEPROM.update(Constants::PuzzleCols + (col * 6) + index, value);
 
 }
 
 void Player::setRow(uint8_t row, uint8_t index, uint8_t value) {
-
-  this->rows[row][index] = value;
+  
+  EEPROM.update(Constants::PuzzleRows + (row * 6) + index, value);
 
 }
 
@@ -116,23 +120,113 @@ void Player::decY() {
   
 }
 
-bool Player::isColMatch(uint8_t col, uint8_t match01, uint8_t match02, uint8_t match03, uint8_t match04, uint8_t match05) {
+bool Player::isColMatch(uint8_t col) {
 
-  return this->cols[col][0] == match01 && 
-         this->cols[col][1] == match02 &&
-         this->cols[col][2] == match03 &&
-         this->cols[col][3] == match04 &&
-         this->cols[col][4] == match05;
+  for (uint8_t z = 0; z < 5; z++) {
+
+    if (EEPROM.read(Constants::PuzzleCols + (col * 6) + z) != this->cols[(col * 6) + z]) {
+      return false;
+    }
+
+  }
+
+  return true;
 
 }
 
-bool Player::isRowMatch(uint8_t row, uint8_t match01, uint8_t match02, uint8_t match03, uint8_t match04, uint8_t match05) {
+bool Player::isRowMatch(uint8_t row) {
 
-  return this->rows[row][0] == match01 && 
-         this->rows[row][1] == match02 &&
-         this->rows[row][2] == match03 &&
-         this->rows[row][3] == match04 &&
-         this->rows[row][4] == match05;
+  for (uint8_t z = 0; z < 5; z++) {
+
+    if (EEPROM.read(Constants::PuzzleRows + (row * 6) + z) != this->rows[(row * 6) + z]) {
+      return false;
+    }
+
+  }
+
+  return true;
 
 }
          
+
+ 
+void Player::updateRowCols() {
+
+  uint8_t width = EEPROM.read(Constants::PuzzleWidth);
+  uint8_t height = EEPROM.read(Constants::PuzzleHeight);
+
+  // Rows ..
+
+  for (uint8_t y = 0; y < height; y++){
+
+    uint8_t series[6] = { 0, 0, 0, 0, 0, 0 };
+    int8_t seriesIdx = -1;
+
+    uint8_t lastData = 0;
+
+    for (uint8_t x = 0; x < width; x++){
+
+      uint8_t data = EEPROM.read(Constants::PuzzleStart + (y * width) + x) & 0x0F;
+
+      if (lastData != data) {
+
+        if (data == static_cast<uint8_t>(GridValue::Selected)) {
+          seriesIdx++;
+          if (seriesIdx == 5) break;
+        }
+        lastData = data;
+
+      }
+
+      if (data == static_cast<uint8_t>(GridValue::Selected)) {
+        series[seriesIdx]++;
+      }
+
+    }
+
+    for (uint8_t z = 0; z < 6; z++){
+
+      this->rows[(y * 6) + z] = series[z];
+
+    }
+
+  }
+
+
+  // Column Headers ..
+  
+  for (uint8_t x = 0; x < width; x++){
+
+    uint8_t series[6] = { 0, 0, 0, 0, 0, 0 };
+    int8_t seriesIdx = -1;
+
+    uint8_t lastData = 0;
+
+    for (uint8_t y = 0; y < height; y++){
+
+      uint8_t data = EEPROM.read(Constants::PuzzleStart + (y * width) + x) & 0x0F;
+
+      if (lastData != data) {
+
+        if (data == static_cast<uint8_t>(GridValue::Selected)) {
+          seriesIdx++;
+          if (seriesIdx == 5) break;
+        }
+        lastData = data;
+
+      }
+      if (data == static_cast<uint8_t>(GridValue::Selected)) {
+        series[seriesIdx]++;
+      }
+
+    }
+
+    for (uint8_t z = 0; z < 6; z++){
+
+      this->cols[(x * 6) + z] = series[z];
+
+    }
+
+  }        
+
+}

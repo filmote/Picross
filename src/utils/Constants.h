@@ -12,13 +12,15 @@
 
 namespace Constants {
 
-  constexpr uint8_t MarginTop = 28;
-  constexpr uint8_t MarginLeft = 22;
   constexpr uint8_t GridWidthX = 8;
   constexpr uint8_t GridWidthY = 8;
 
   constexpr uint16_t PuzzleWidth = 450;
-  constexpr uint16_t PuzzleHeight = 451;
-  constexpr uint16_t PuzzleStart = 452;
+  constexpr uint16_t PuzzleHeight = PuzzleWidth + 1;
+  constexpr uint16_t PuzzleMaxRows = PuzzleHeight + 1;
+  constexpr uint16_t PuzzleMaxCols = PuzzleMaxRows + 1;
+  constexpr uint16_t PuzzleStart = PuzzleMaxCols + 1;
+  constexpr uint16_t PuzzleCols = PuzzleStart + 225;
+  constexpr uint16_t PuzzleRows = PuzzleCols + 90;
   
 }
