@@ -30,6 +30,7 @@ class Game : public GameStateMachine<GameContext, GameStateType> {
 
     TitleScreenState titleScreenState;
     SplashScreenState splashScreenState;
+    SelectPuzzleState selectPuzzleState;
     PlayGameState playGameState;
     GameOverState gameOverState;
     

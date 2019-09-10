@@ -6,6 +6,7 @@
 enum class GameStateType : uint8_t {
 	SplashScreen,
 	TitleScreen,
+	SelectPuzzle, 
   PlayGame,
   GameOver
 };

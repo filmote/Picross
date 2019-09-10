@@ -22,13 +22,19 @@ uint8_t Player::getY() {
 
 GridValue Player::getGrid() {
 
-  return this->grid[this->x][this->y];
+  uint8_t width = EEPROM.read(Constants::PuzzleWidth);
+  uint8_t height = EEPROM.read(Constants::PuzzleHeight);
+
+  return static_cast<GridValue>(EEPROM.read(Constants::PuzzleStart + (this->y * width) + (this->x)));
 
 }
 
 GridValue Player::getGrid(uint8_t x, uint8_t y) {
 
-  return this->grid[x][y];
+  uint8_t width = EEPROM.read(Constants::PuzzleWidth);
+  uint8_t height = EEPROM.read(Constants::PuzzleHeight);
+
+  return static_cast<GridValue>(EEPROM.read(Constants::PuzzleStart + (y * width) + x));
 
 }
 
@@ -58,13 +64,19 @@ void Player::setY(uint8_t value) {
 
 void Player::setGrid(GridValue value) {
 
-  this->grid[this->x][this->y] = value;
+  uint8_t width = EEPROM.read(Constants::PuzzleWidth);
+  uint8_t height = EEPROM.read(Constants::PuzzleHeight);
+
+  EEPROM.update(Constants::PuzzleStart + (this->y * width) + x, static_cast<uint8_t>(value));
 
 }
 
 void Player::setGrid(uint8_t x, uint8_t y, GridValue value) {
 
-  this->grid[x][y] = value;
+  uint8_t width = EEPROM.read(Constants::PuzzleWidth);
+  uint8_t height = EEPROM.read(Constants::PuzzleHeight);
+
+  EEPROM.update(Constants::PuzzleStart + (y * width) + x, static_cast<uint8_t>(value));
 
 }
 

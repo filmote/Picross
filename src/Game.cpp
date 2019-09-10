@@ -69,6 +69,17 @@ void Game::loop(void) {
 			this->titleScreenState.render(*this);
 			break;
 
+		case GameStateType::SelectPuzzle: 
+
+			if (currentState != savedCurrentState) {
+				this->context.gameState = this->currentState;
+				this->selectPuzzleState.activate(*this);
+				this->savedCurrentState = this->currentState;
+			}
+			this->selectPuzzleState.update(*this);
+			this->selectPuzzleState.render(*this);
+			break;
+
 		case GameStateType::PlayGame: 
 
 			if (currentState != savedCurrentState) {

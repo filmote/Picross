@@ -17,5 +17,8 @@ namespace Constants {
   constexpr uint8_t GridWidthX = 8;
   constexpr uint8_t GridWidthY = 8;
 
+  constexpr uint16_t PuzzleWidth = 450;
+  constexpr uint16_t PuzzleHeight = 451;
+  constexpr uint16_t PuzzleStart = 452;
   
 }

@@ -39,7 +39,6 @@ class Player {
 
     uint8_t x = 0;
     uint8_t y = 0;
-    GridValue grid[12][12];
     uint8_t cols[12][5];
     uint8_t rows[12][5];
 
