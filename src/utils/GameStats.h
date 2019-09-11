@@ -19,13 +19,6 @@ class GameStats {
 
     GameStats() { };
 
-    // Player player1;
-    // Player player2;
-    // Deck deck;
-
-//    WhichPlayer playerDealer = WhichPlayer::Player2;
-    uint8_t gridSize = 12;
-
     uint8_t yOffset = 0;
 
   void resetGame() {
