@@ -4,14 +4,16 @@
 #include "../utils/Constants.h"
 #include "../utils/Enums.h"
 
-class Player { 
+class Puzzle { 
 
   public:
 
-    Player();
+    Puzzle();
 
     uint8_t getX();
     uint8_t getY();
+    uint8_t getSize();
+    uint8_t getPuzzleIndex();
     GridValue getGrid();
     GridValue getGrid(uint8_t x, uint8_t y);
     uint8_t getCol(uint8_t col, uint8_t index);
@@ -19,6 +21,8 @@ class Player {
 
     void setX(uint8_t value);
     void setY(uint8_t value);
+    void setSize(uint8_t value);
+    void setPuzzleIndex(uint8_t value);
     void setGrid(GridValue value);
     void setGrid(uint8_t x, uint8_t y, GridValue value);
     void setCol(uint8_t col, uint8_t index, uint8_t value);
