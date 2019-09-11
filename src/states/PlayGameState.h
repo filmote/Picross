@@ -11,7 +11,7 @@ class PlayGameState : public BaseState {
 
   private:
 
-    Player player;
+    Puzzle puzzle;
 
 
   public:	
