@@ -16,5 +16,8 @@ void PlayGameState::activate(StateMachine & machine) {
 	this->marginLeft = 3 + this->maxSeriesRow * 5;
 	this->marginTop = 2 + this->maxSeriesCol * 7;
 
+	this->counter = 0;
+	this->gameOver = false;
+
 }
 

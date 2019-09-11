@@ -2,6 +2,11 @@
 
 namespace Puzzles {
 
+  const unsigned char PROGMEM pica[] = {
+  3, 3,
+  0x00, 0x02, 0x00, 
+  };
+
   const unsigned char PROGMEM Puzzle_00[] = {
   9, 9,
   0x38, 0x7c, 0xfe, 0xff, 0xff, 0xff, 0xfe, 0x7c, 0x38, 
@@ -20,6 +25,6 @@ namespace Puzzles {
   0x0f, 0x0f, 0x0f, 0x0f, 0x0f, 0x0f, 0x0f, 0x0f, 0x0f, 0x0f, 0x0f, 0x0f, 
   };
 
-  const uint8_t * const puzzles[] PROGMEM = { Puzzle_00, Puzzle_01, Puzzle_02, Puzzle_02 };
+  const uint8_t * const puzzles[] PROGMEM = { pica, Puzzle_00, Puzzle_01, Puzzle_02, Puzzle_02 };
 
 }

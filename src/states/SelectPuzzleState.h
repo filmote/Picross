@@ -5,10 +5,12 @@
 #include "../utils/Enums.h"
 #include "BaseState.h"
 
-class SelectPuzzleState : public BaseState {//public GameState<GameContext, GameStateType> {
+class SelectPuzzleState : public BaseState {
 
   private:
-    uint8_t counter = 0;
+
+    uint8_t puzzleIndex = 0;
+    void populatePuzzle(uint8_t puzzleIndex);
 
   public:
     void activate(StateMachine & machine) override;

@@ -20,6 +20,7 @@
 
 #include "states/States.h"
 #include "utils/Utils.h"
+#include "utils/EEPROM_Utils.h"
 
 
 void Game::setup(void) {
@@ -32,6 +33,7 @@ void Game::setup(void) {
 	arduboy.audio.begin();
 	arduboy.setFrameRate(50);
   arduboy.initRandomSeed();
+	EEPROM_Utils::initEEPROM(false);
 
 	this->currentState = GameStateType::SplashScreen; 
 	this->splashScreenState.activate(*this);

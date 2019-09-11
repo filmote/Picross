@@ -8,52 +8,58 @@
 // 
 void PlayGameState::render(StateMachine & machine) {
 
+  uint8_t const solidLines[] =
+   {
+     0, 0, 0, 0, 0,    // 0
+     0, 0, 0, 0, 0,    // 1
+     0, 2, 0, 0, 0,    // 2
+     0, 3, 0, 0, 0,    // 3
+     0, 4, 0, 0, 0,    // 4
+     0, 5, 0, 0, 0,    // 5
+     0, 3, 6, 0, 0,    // 6
+     0, 7, 0, 0, 0,    // 7
+     0, 4, 8, 0, 0,    // 8
+     0, 3, 6, 9, 0,    // 9
+     0, 5, 10, 0, 0,   // 10
+     0, 11, 0, 0, 0,   // 11
+     0, 4, 8, 12, 0,   // 12
+     0, 13, 0, 0, 0,   // 13
+     0, 7, 14, 0, 0,   // 14
+     0, 5, 10, 15, 0,  // 15
+     0, 4, 8, 12, 16,  // 16
+   };
+
 	auto & arduboy = machine.getContext().arduboy;
   auto & gameStats = machine.getContext().gameStats;
 
   bool flash = arduboy.getFrameCountHalf(48);  
+  uint8_t size = this->puzzle.getSize();
+  uint8_t completedRows = 0;
 
-  for (uint8_t x = 0; x <= gameStats.gridSize; x++) {
+  for (uint8_t x = 0; x <= size; x++) {
 
 
-    // Vertical lines ..
+    // Horizontal and Vertical lines ..
 
-    if (x==0 || x==4 || x == 8 || x ==12) {
+    for (uint8_t z = size * 5; z < (size * 5) + 5; z++) {
 
-      arduboy.drawFastVLine(this->marginLeft + (x * Constants::GridWidthX), -gameStats.yOffset, this->marginTop - 2, WHITE );  
-
-      for (uint8_t y = 3; y< this->marginTop + (gameStats.gridSize * Constants::GridWidthY) - gameStats.yOffset; y = y + 8) {
-        arduboy.drawPixel(this->marginLeft + (x * Constants::GridWidthX), y, WHITE);
-        arduboy.drawPixel(this->marginLeft + (x * Constants::GridWidthX), y + 2, WHITE);
+      if (x == solidLines[z]) {
+        arduboy.drawFastVLine(this->marginLeft + (x * Constants::GridWidthX), this->marginTop - gameStats.yOffset, size * Constants::GridWidthY, WHITE); 
+        arduboy.drawFastHLine(this->marginLeft, this->marginTop + (x * Constants::GridWidthY) - gameStats.yOffset, size * Constants::GridWidthX, WHITE);  
       }
 
     }
 
-
-    // Horizntal lines ..
-
-    if (x==0 || x==4 || x == 8 || x ==12) {
-
-      arduboy.drawFastHLine(0, this->marginTop + (x * Constants::GridWidthY) - gameStats.yOffset, this->marginLeft - 2, WHITE );  
-
-      for (uint8_t y = 5; y < this->marginLeft + (gameStats.gridSize * Constants::GridWidthX); y = y + 8) {
-        arduboy.drawPixel(y, this->marginTop + (x * Constants::GridWidthY) - gameStats.yOffset, WHITE);
-        arduboy.drawPixel(y + 2, this->marginTop + (x * Constants::GridWidthY) - gameStats.yOffset, WHITE);
-      }
-
-    }
-
-    arduboy.drawVerticalDottedLine(0, this->marginTop + (gameStats.gridSize * Constants::GridWidthY) - gameStats.yOffset, this->marginLeft + (x * Constants::GridWidthX));  
-    arduboy.drawHorizontalDottedLine(0, this->marginLeft + (gameStats.gridSize * Constants::GridWidthX), this->marginTop + (x * Constants::GridWidthY) - gameStats.yOffset);  
+    arduboy.drawVerticalDottedLine(0, this->marginTop + (size * Constants::GridWidthY) - gameStats.yOffset, this->marginLeft + (x * Constants::GridWidthX));  
+    arduboy.drawHorizontalDottedLine(0, this->marginLeft + (size * Constants::GridWidthX), this->marginTop + (x * Constants::GridWidthY) - gameStats.yOffset);  
 
   }
 
+  for (uint8_t x = 0; x < size; x++) {
 
-  for (uint8_t x = 0; x < gameStats.gridSize; x++) {
+    for (uint8_t y = 0; y < size; y++) {
 
-    for (uint8_t y = 0; y < gameStats.gridSize; y++) {
-
-      GridValue gridValue = this->player.getGrid(x, y);
+      GridValue gridValue = this->puzzle.getGrid(x, y);
 
       switch (gridValue) {
 
@@ -77,12 +83,14 @@ void PlayGameState::render(StateMachine & machine) {
 
   // Render column headers ..
 
-  for (uint8_t x = 0; x < gameStats.gridSize; x++) {
+  for (uint8_t x = 0; x < size; x++) {
 
-    if (this->player.isColMatch(x)) {
+    if (this->puzzle.isColMatch(x)) {
 
       arduboy.fillRect(this->marginLeft + (x * Constants::GridWidthX) + 1, -gameStats.yOffset, 7, this->marginTop - 1, WHITE);
       font3x5.setTextColor(BLACK);
+
+      completedRows++;
 
     }
     else {
@@ -93,11 +101,11 @@ void PlayGameState::render(StateMachine & machine) {
 
     for (uint8_t y = 0; y < 5; y++) {
 
-      uint8_t val = this->player.getCol(x, y);
+      uint8_t val = this->puzzle.getCol(x, y);
 
       if (val != 0) {
       
-        font3x5.setCursor(this->marginLeft + (x * Constants::GridWidthX) + 3 - (val >= 10 ? 3 : 0), -gameStats.yOffset + y * 7);
+        font3x5.setCursor(this->marginLeft + (x * Constants::GridWidthX) + 3 - (val >= 10 ? 3 : (val == 1 ? 1 : 0)), -gameStats.yOffset + y * 7);
 
         font3x5.print(val);
         font3x5.print("\n");
@@ -110,12 +118,14 @@ void PlayGameState::render(StateMachine & machine) {
 
   // Render row headers ..
 
-  for (uint8_t y = 0; y < gameStats.gridSize; y++) {
+  for (uint8_t y = 0; y < size; y++) {
 
-    if (this->player.isRowMatch(y)) {
+    if (this->puzzle.isRowMatch(y)) {
 
       arduboy.fillRect(0, this->marginTop + (y * Constants::GridWidthY) + 1 - gameStats.yOffset, this->marginLeft - 1, 7, WHITE);
       font3x5.setTextColor(BLACK);
+
+      completedRows++;
 
     }
     else {
@@ -128,7 +138,7 @@ void PlayGameState::render(StateMachine & machine) {
 
     for (uint8_t x = 0; x < 5; x++) {
       
-      uint8_t val = this->player.getRow(y, x);
+      uint8_t val = this->puzzle.getRow(y, x);
 
       if (val != 0) {
 
@@ -142,8 +152,32 @@ void PlayGameState::render(StateMachine & machine) {
 
   }
 
-  if (flash) {
-    arduboy.drawRect(this->marginLeft + (this->player.getX() * Constants::GridWidthX), this->marginTop + (this->player.getY() * Constants::GridWidthY) - gameStats.yOffset, 9, 9);
+
+  // Game over?
+
+  if (completedRows == 2 * size) {
+
+    this->gameOver = true;
+    EEPROM.update(Constants::PuzzlesSolved + this->puzzle.getPuzzleIndex(), 1);
+
+  }
+
+
+  if (this->gameOver) {
+
+    if (this->counter == 64) {
+
+      Sprites::drawOverwrite(24, 24, Images::Congratulations, 0);
+
+    }
+
+  }
+  else {
+
+    if (flash) {
+      arduboy.drawRect(this->marginLeft + (this->puzzle.getX() * Constants::GridWidthX), this->marginTop + (this->puzzle.getY() * Constants::GridWidthY) - gameStats.yOffset, 9, 9);
+    }
+
   }
 
 }
