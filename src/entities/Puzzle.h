@@ -44,7 +44,7 @@ class Puzzle {
 
     uint8_t x = 0;
     uint8_t y = 0;
-    uint8_t rows[Constants::NumberOfNumbers * 15];
-    uint8_t cols[Constants::NumberOfNumbers * 15];
+    uint8_t rows[Constants::NumberOfNumbers * 16];
+    uint8_t cols[Constants::NumberOfNumbers * 16];
 
 };

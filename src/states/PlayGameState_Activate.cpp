@@ -19,5 +19,8 @@ void PlayGameState::activate(StateMachine & machine) {
 	this->counter = 0;
 	this->gameOver = false;
 
+	this->puzzle.setX(0);
+	this->puzzle.setY(0);
+
 }
 

@@ -16,7 +16,7 @@ void SelectPuzzleState::activate(StateMachine & machine) {
 
 
   // If the current puzzle has been completed, then look for the first unfinished puzzle ..
-  
+
   if (EEPROM.read(Constants::PuzzlesSolved + this->puzzleIndex) == 1) {
 
     for (uint8_t x = 0; x < numberOfImages; x++) {
@@ -140,7 +140,7 @@ void SelectPuzzleState::populatePuzzle(uint8_t puzzleIndex) {
     }
 
 
-    for (uint8_t z = 0; z < Constants::NumberOfNumbers; z++){
+    for (uint8_t z = 0; z < Constants::NumberOfNumbers; z++) {
 
       if (series[z] > 0 && maxSeriesRow < z + 1) maxSeriesRow = z + 1;
       EEPROM.update(Constants::PuzzleRows + (y * Constants::NumberOfNumbers) + z, series[z]);
@@ -203,11 +203,12 @@ void SelectPuzzleState::render(StateMachine & machine) {
 	auto & arduboy = machine.getContext().arduboy;
   
   uint8_t numberOfImages = ArrayLength(Puzzles::puzzles);
+
   bool flash = arduboy.getFrameCountHalf(48);  
 
   for (int8_t x = this->puzzleIndex - 4; x < this->puzzleIndex + 4; x++) {
 
-    if (x >= 0 && x < numberOfImages - 1) {
+    if (x >= 0 && x < numberOfImages) {
 
       const uint8_t *puzzle = pgm_read_word_near(&Puzzles::puzzles[x]);
 
@@ -219,7 +220,7 @@ void SelectPuzzleState::render(StateMachine & machine) {
       }
 
       if (EEPROM.read(Constants::PuzzlesSolved + x) == 1) {  
-        Sprites::drawSelfMasked(Constants::Select_Centre - ((this->puzzleIndex - x) * Constants::Select_Spacing) + 9 - (width / 2), Constants::Select_Top + 9 - (height / 2), pgm_read_word(&Puzzles::puzzles[x]), 0);
+        Sprites::drawSelfMasked(Constants::Select_Centre - ((this->puzzleIndex - x) * Constants::Select_Spacing) + 10 - (width / 2), Constants::Select_Top + 10 - (height / 2), pgm_read_word(&Puzzles::puzzles[x]), 0);
       }
       else {
         Sprites::drawSelfMasked(Constants::Select_Centre - ((this->puzzleIndex - x) * Constants::Select_Spacing), Constants::Select_Top, Images::QuestionMark, 0);
@@ -233,6 +234,7 @@ void SelectPuzzleState::render(StateMachine & machine) {
     }
 
   }
+Serial.println(" ");  
 
   arduboy.drawHorizontalDottedLine(0, 128, 8);
   arduboy.drawHorizontalDottedLine(0, 128, 48);
