@@ -13,14 +13,14 @@ void PlayGameState::update(StateMachine & machine) {
 	auto pressed = arduboy.pressedButtons();
 
 
-	if ((justPressed & LEFT_BUTTON) && this->player.getX() > 0)													this->player.decX();
-	if ((justPressed & RIGHT_BUTTON) && this->player.getX() < gameStats.gridSize - 1)		this->player.incX();
-	if ((justPressed & UP_BUTTON) && this->player.getY() > 0)														this->player.decY();
-	if ((justPressed & DOWN_BUTTON) && this->player.getY() < gameStats.gridSize - 1)		this->player.incY();
+	if ((justPressed & LEFT_BUTTON) && this->puzzle.getX() > 0)													this->puzzle.decX();
+	if ((justPressed & RIGHT_BUTTON) && this->puzzle.getX() < this->puzzle.getSize() - 1)		this->puzzle.incX();
+	if ((justPressed & UP_BUTTON) && this->puzzle.getY() > 0)														this->puzzle.decY();
+	if ((justPressed & DOWN_BUTTON) && this->puzzle.getY() < this->puzzle.getSize() - 1)		this->puzzle.incY();
 
 
-	if (this->player.getY() >= 3) {
-		gameStats.yOffset = ((this->player.getY() - 3) * 9);
+	if (this->puzzle.getY() >= 3) {
+		gameStats.yOffset = ((this->puzzle.getY() - 3) * 9);
 	}
 	else {
 		gameStats.yOffset = 0;
@@ -28,17 +28,17 @@ void PlayGameState::update(StateMachine & machine) {
 
 	if (justPressed & A_BUTTON) {
 
-		GridValue current = this->player.getGrid();
+		GridValue current = this->puzzle.getGrid();
 
 		switch (current) {
 
 			case GridValue::Blank:	
 			case GridValue::Marked:	
-				this->player.setGrid(GridValue::Selected);
+				this->puzzle.setGrid(GridValue::Selected);
 				break;
 
 			case GridValue::Selected:	
-				this->player.setGrid(GridValue::Blank);
+				this->puzzle.setGrid(GridValue::Blank);
 				break;
 				
 		}
@@ -47,17 +47,17 @@ void PlayGameState::update(StateMachine & machine) {
 
 	if (justPressed & B_BUTTON) {
 
-		GridValue current = this->player.getGrid();
+		GridValue current = this->puzzle.getGrid();
 
 		switch (current) {
 
 			case GridValue::Blank:	
 			case GridValue::Selected:	
-				this->player.setGrid(GridValue::Marked);
+				this->puzzle.setGrid(GridValue::Marked);
 				break;
 
 			case GridValue::Marked:	
-				this->player.setGrid(GridValue::Blank);
+				this->puzzle.setGrid(GridValue::Blank);
 				break;
 				
 		}
