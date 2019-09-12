@@ -11,15 +11,18 @@
 void SelectPuzzleState::activate(StateMachine & machine) {
 
   (void)machine;
-  uint8_t numberOfImages = ArrayLength(Puzzles::puzzles);
+
+  uint16_t numberOfImages = ArrayLength(Puzzles::puzzles);
   this->puzzleIndex = EEPROM.read(Constants::PuzzleIndex);
+  uint8_t puzzleIndexMod25 = this->puzzleIndex % 25;
+  uint8_t puzzleRange = this->puzzleIndex / 25;
 
 
-  // If the current puzzle has been completed, then look for the first unfinished puzzle ..
+  // If the current puzzle has been completed, then look for the next unfinished puzzle ..
 
   if (EEPROM.read(Constants::PuzzlesSolved + this->puzzleIndex) == 1) {
 
-    for (uint8_t x = 0; x < numberOfImages; x++) {
+    for (uint8_t x = this->puzzleIndex + 1; x < numberOfImages; x++) {
 
       if (EEPROM.read(Constants::PuzzlesSolved + x) == 0) {
 
@@ -43,20 +46,34 @@ void SelectPuzzleState::update(StateMachine & machine) {
 	auto & arduboy = machine.getContext().arduboy;
 	auto justPressed = arduboy.justPressedButtons();
 
-  uint8_t numberOfImages = ArrayLength(Puzzles::puzzles);
+  uint16_t numberOfImages = ArrayLength(Puzzles::puzzles);
+  uint8_t puzzleIndexMod25 = this->puzzleIndex % 25;
+  uint8_t puzzleRange = this->puzzleIndex / 25;
 
 
   // Navigation .. 
 
-  if ((justPressed & LEFT_BUTTON) && this->puzzleIndex > 0) {
+  if ((justPressed & LEFT_BUTTON) && puzzleIndexMod25 > 0) {
 
     this->puzzleIndex--;
 
   }
 
-  if ((justPressed & RIGHT_BUTTON) && this->puzzleIndex < numberOfImages - 1) {
+  if ((justPressed & RIGHT_BUTTON) && puzzleIndexMod25 < 24) {
 
     this->puzzleIndex++;
+
+  }
+
+  if ((justPressed & UP_BUTTON) && puzzleRange > 0) {
+
+    this->puzzleIndex = this->puzzleIndex - 25;
+
+  }
+
+  if ((justPressed & DOWN_BUTTON) && puzzleRange < 15) {
+
+    this->puzzleIndex = this->puzzleIndex + 25;
 
   }
 
@@ -202,41 +219,53 @@ void SelectPuzzleState::render(StateMachine & machine) {
 
 	auto & arduboy = machine.getContext().arduboy;
   
-  uint8_t numberOfImages = ArrayLength(Puzzles::puzzles);
+  uint8_t puzzleRange = this->puzzleIndex / 25;
+  uint8_t puzzleIndexMod25 = this->puzzleIndex % 25;
+  uint16_t numberOfImages = ArrayLength(Puzzles::puzzles);
+
+  int8_t lowerLimit = (puzzleIndexMod25 - 2 < 0 ? 0 : puzzleIndexMod25 - 2);
+  int8_t upperLimit = lowerLimit + 7;
+  int8_t cursorPosition = (puzzleIndexMod25 < 2 ? lowerLimit + puzzleIndexMod25 : lowerLimit + 2);
 
   bool flash = arduboy.getFrameCountHalf(48);  
 
-  for (int8_t x = this->puzzleIndex - 4; x < this->puzzleIndex + 4; x++) {
+  for (int8_t x = lowerLimit; x < upperLimit; x++) {
 
-    if (x >= 0 && x < numberOfImages) {
+    uint8_t xPos = x - lowerLimit;
 
-      const uint8_t *puzzle = pgm_read_word_near(&Puzzles::puzzles[x]);
+//    if (x >= 0) {
+
+      const uint8_t *puzzle = pgm_read_word_near(&Puzzles::puzzles[(puzzleRange * 25) + x]);
 
       uint8_t width = pgm_read_byte(&puzzle[0]);
       uint8_t height = pgm_read_byte(&puzzle[1]);
 
-      if ((flash && x == this->puzzleIndex) || (x != this->puzzleIndex)) {
-        Sprites::drawOverwrite(Constants::Select_Centre - ((this->puzzleIndex - x) * Constants::Select_Spacing), Constants::Select_Top, Images::Box, 0);
+      if ((flash && (x == cursorPosition)) || (x != cursorPosition)) {
+        Sprites::drawSelfMasked(4 + (xPos * Constants::Select_Spacing), Constants::Select_Top, Images::Box, 0);
       }
 
-      if (EEPROM.read(Constants::PuzzlesSolved + x) == 1) {  
-        Sprites::drawSelfMasked(Constants::Select_Centre - ((this->puzzleIndex - x) * Constants::Select_Spacing) + 10 - (width / 2), Constants::Select_Top + 10 - (height / 2), pgm_read_word(&Puzzles::puzzles[x]), 0);
+      if (EEPROM.read(Constants::PuzzlesSolved + (puzzleRange * 25) + x) == 1) {  
+        Sprites::drawSelfMasked(4 + (xPos * Constants::Select_Spacing) + 10 - (width / 2), Constants::Select_Top + 10 - (height / 2), pgm_read_word(&Puzzles::puzzles[(puzzleRange * 25) + x]), 0);
       }
       else {
-        Sprites::drawSelfMasked(Constants::Select_Centre - ((this->puzzleIndex - x) * Constants::Select_Spacing), Constants::Select_Top, Images::QuestionMark, 0);
+        Sprites::drawSelfMasked(4 + (xPos * Constants::Select_Spacing), Constants::Select_Top, Images::QuestionMark, 0);
       }
 
-      font3x5.setCursor(Constants::Select_Centre - ((this->puzzleIndex - x) * Constants::Select_Spacing) + (width < 10 ? 5 : 0) - 2, Constants::Select_Label);
-      font3x5.print(width);
-      font3x5.print("~x~");
-      font3x5.print(height);
+      font3x5.setCursor(4 + (xPos * Constants::Select_Spacing) + 7, Constants::Select_Label);
+      if (x + 1 < 10) font3x5.print("0");
+      font3x5.print(x + 1);
 
-    }
+//    }
 
   }
-Serial.println(" ");  
 
-  arduboy.drawHorizontalDottedLine(0, 128, 8);
-  arduboy.drawHorizontalDottedLine(0, 128, 48);
+  arduboy.drawHorizontalDottedLine(0, 128, 12);
+  arduboy.drawHorizontalDottedLine(0, 128, 52);
+
+  font3x5.setCursor(0, 0);
+  font3x5.print("Puzzles ");
+  font3x5.print(puzzleRange + 5);
+  font3x5.print("x");
+  font3x5.print(puzzleRange + 5);
 
 }

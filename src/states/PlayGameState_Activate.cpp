@@ -21,6 +21,7 @@ void PlayGameState::activate(StateMachine & machine) {
 
 	this->puzzle.setX(0);
 	this->puzzle.setY(0);
+	this->puzzle.updateRowCols();
 
 }
 

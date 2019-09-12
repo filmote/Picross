@@ -21,7 +21,7 @@ namespace Constants {
 
   constexpr uint16_t Select_Spacing = 25;
   constexpr uint16_t Select_Centre = 55;
-  constexpr uint16_t Select_Top = 15;
+  constexpr uint16_t Select_Top = 19;
   constexpr uint16_t Select_Label = Select_Top + 21;
 
 }
