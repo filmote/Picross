@@ -162,12 +162,16 @@ void PlayGameState::render(StateMachine & machine) {
 
   }
 
-
   if (this->gameOver) {
 
     if (this->counter == 64) {
 
-      Sprites::drawOverwrite(24, 24, Images::Congratulations, 0);
+      const uint8_t *puzzle = pgm_read_word_near(&Puzzles::puzzles[this->puzzle.getPuzzleIndex()]);   
+      uint8_t width = pgm_read_byte(&puzzle[0]);
+      uint8_t height = pgm_read_byte(&puzzle[1]);
+
+      Sprites::drawExternalMask(16, 20, Images::Congratulations,  Images::Congratulations_Mask, 0, 0);
+      Sprites::drawSelfMasked(103 - (width / 2), 32 - (height / 2), pgm_read_word(&Puzzles::puzzles[this->puzzle.getPuzzleIndex()]), 0);
 
     }
 

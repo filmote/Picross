@@ -9,7 +9,7 @@ class SelectPuzzleState : public BaseState {
 
   private:
 
-    uint8_t puzzleIndex = 0;
+    uint16_t puzzleIndex = 0;
     void populatePuzzle(uint8_t puzzleIndex);
 
   public:

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "MessagBox.h"
-#include "Player.h"
+#include "..\puzzles\Puzzles.h"
 #include "Splash.h"
 #include "Title.h"
-#include "Puzzles.h"
+#include "Player.h"

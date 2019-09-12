@@ -71,7 +71,7 @@ void SelectPuzzleState::update(StateMachine & machine) {
 
   }
 
-  if ((justPressed & DOWN_BUTTON) && puzzleRange < 15) {
+  if ((justPressed & DOWN_BUTTON) && puzzleRange < 11) {
 
     this->puzzleIndex = this->puzzleIndex + 25;
 
@@ -233,29 +233,26 @@ void SelectPuzzleState::render(StateMachine & machine) {
 
     uint8_t xPos = x - lowerLimit;
 
-//    if (x >= 0) {
 
-      const uint8_t *puzzle = pgm_read_word_near(&Puzzles::puzzles[(puzzleRange * 25) + x]);
+    const uint8_t *puzzle = pgm_read_word_near(&Puzzles::puzzles[(puzzleRange * 25) + x]);
 
-      uint8_t width = pgm_read_byte(&puzzle[0]);
-      uint8_t height = pgm_read_byte(&puzzle[1]);
+    uint8_t width = pgm_read_byte(&puzzle[0]);
+    uint8_t height = pgm_read_byte(&puzzle[1]);
 
-      if ((flash && (x == cursorPosition)) || (x != cursorPosition)) {
-        Sprites::drawSelfMasked(4 + (xPos * Constants::Select_Spacing), Constants::Select_Top, Images::Box, 0);
-      }
+    if ((flash && (x == cursorPosition)) || (x != cursorPosition)) {
+      Sprites::drawSelfMasked(4 + (xPos * Constants::Select_Spacing), Constants::Select_Top, Images::Box, 0);
+    }
 
-      if (EEPROM.read(Constants::PuzzlesSolved + (puzzleRange * 25) + x) == 1) {  
-        Sprites::drawSelfMasked(4 + (xPos * Constants::Select_Spacing) + 10 - (width / 2), Constants::Select_Top + 10 - (height / 2), pgm_read_word(&Puzzles::puzzles[(puzzleRange * 25) + x]), 0);
-      }
-      else {
-        Sprites::drawSelfMasked(4 + (xPos * Constants::Select_Spacing), Constants::Select_Top, Images::QuestionMark, 0);
-      }
+    if (EEPROM.read(Constants::PuzzlesSolved + (puzzleRange * 25) + x) == 1) {  
+      Sprites::drawSelfMasked(4 + (xPos * Constants::Select_Spacing) + 10 - (width / 2), Constants::Select_Top + 10 - (height / 2), pgm_read_word(&Puzzles::puzzles[(puzzleRange * 25) + x]), 0);
+    }
+    else {
+      Sprites::drawSelfMasked(4 + (xPos * Constants::Select_Spacing), Constants::Select_Top, Images::QuestionMark, 0);
+    }
 
-      font3x5.setCursor(4 + (xPos * Constants::Select_Spacing) + 7, Constants::Select_Label);
-      if (x + 1 < 10) font3x5.print("0");
-      font3x5.print(x + 1);
-
-//    }
+    font3x5.setCursor(4 + (xPos * Constants::Select_Spacing) + 7, Constants::Select_Label);
+    if (x + 1 < 10) font3x5.print("0");
+    font3x5.print(x + 1);
 
   }
 
@@ -267,5 +264,8 @@ void SelectPuzzleState::render(StateMachine & machine) {
   font3x5.print(puzzleRange + 5);
   font3x5.print("x");
   font3x5.print(puzzleRange + 5);
+
+  if (puzzleRange > 0) Sprites::drawSelfMasked(55, 2, Images::ArrowUp, 0);
+  if (puzzleRange < 15) Sprites::drawSelfMasked(63, 2, Images::ArrowDown, 0);
 
 }
