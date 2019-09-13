@@ -63,6 +63,6 @@ void TitleScreenState::render(StateMachine & machine) {
 
 	Sprites::drawOverwrite(0, -6, Images::TitleScreen, 0);
 
-	if (this->counter == 64) Sprites::drawOverwrite(48, 53, Images::TitleScreen_PressA, 0);
+	if (this->counter == 64) Sprites::drawOverwrite(16, 53, Images::TitleScreen_PressA, 0);
 	
 }

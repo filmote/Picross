@@ -10,7 +10,7 @@ class SelectPuzzleState : public BaseState {
   private:
 
     uint16_t puzzleIndex = 0;
-    void populatePuzzle(uint8_t puzzleIndex);
+    void populatePuzzle(uint16_t puzzleIndex);
 
   public:
     void activate(StateMachine & machine) override;

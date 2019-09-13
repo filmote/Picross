@@ -29,6 +29,8 @@ class PlayGameState : public BaseState {
 
     bool gameOver = false;
     uint8_t counter = 0;
+    uint8_t xOffset = 0;
+    uint8_t yOffset = 0;
 
 };
 

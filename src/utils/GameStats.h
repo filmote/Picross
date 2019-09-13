@@ -19,8 +19,6 @@ class GameStats {
 
     GameStats() { };
 
-    uint8_t yOffset = 0;
-
   void resetGame() {
 
     // player1.resetHand(true);

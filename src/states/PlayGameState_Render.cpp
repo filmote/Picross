@@ -44,14 +44,14 @@ void PlayGameState::render(StateMachine & machine) {
     for (uint8_t z = size * 5; z < (size * 5) + 5; z++) {
 
       if (x == solidLines[z]) {
-        arduboy.drawFastVLine(this->marginLeft + (x * Constants::GridWidthX), this->marginTop - gameStats.yOffset, size * Constants::GridWidthY, WHITE); 
-        arduboy.drawFastHLine(this->marginLeft, this->marginTop + (x * Constants::GridWidthY) - gameStats.yOffset, size * Constants::GridWidthX, WHITE);  
+        arduboy.drawFastVLine(this->marginLeft + (x * Constants::GridWidthX) - this->xOffset, this->marginTop - this->yOffset, size * Constants::GridWidthY, WHITE); 
+        arduboy.drawFastHLine(this->marginLeft - this->xOffset, this->marginTop + (x * Constants::GridWidthY) - this->yOffset, size * Constants::GridWidthX, WHITE);  
       }
 
     }
 
-    arduboy.drawVerticalDottedLine(0, this->marginTop + (size * Constants::GridWidthY) - gameStats.yOffset, this->marginLeft + (x * Constants::GridWidthX));  
-    arduboy.drawHorizontalDottedLine(0, this->marginLeft + (size * Constants::GridWidthX), this->marginTop + (x * Constants::GridWidthY) - gameStats.yOffset);  
+    arduboy.drawVerticalDottedLine(0, this->marginTop + (size * Constants::GridWidthY) - this->yOffset, this->marginLeft + (x * Constants::GridWidthX));  
+    arduboy.drawHorizontalDottedLine(0, this->marginLeft + (size * Constants::GridWidthX), this->marginTop + (x * Constants::GridWidthY) - this->yOffset);  
 
   }
 
@@ -67,11 +67,11 @@ void PlayGameState::render(StateMachine & machine) {
           break;
 
         case GridValue::Selected:
-          arduboy.fillRect(this->marginLeft + (x * Constants::GridWidthX) + 2, this->marginTop + (y * Constants::GridWidthY) + 2 - gameStats.yOffset, 5, 5, WHITE);
+          arduboy.fillRect(this->marginLeft + (x * Constants::GridWidthX) + 2 - this->xOffset, this->marginTop + (y * Constants::GridWidthY) + 2 - this->yOffset, 5, 5, WHITE);
           break;
 
         case GridValue::Marked:
-          Sprites::drawSelfMasked(this->marginLeft + (x * Constants::GridWidthX) + 2, this->marginTop + (y * Constants::GridWidthY) + 2 - gameStats.yOffset, Images::Marked, 0);
+          Sprites::drawSelfMasked(this->marginLeft + (x * Constants::GridWidthX) + 2 - this->xOffset, this->marginTop + (y * Constants::GridWidthY) + 2 - this->yOffset, Images::Marked, 0);
           break;
           
       }
@@ -87,7 +87,7 @@ void PlayGameState::render(StateMachine & machine) {
 
     if (this->puzzle.isColMatch(x)) {
 
-      arduboy.fillRect(this->marginLeft + (x * Constants::GridWidthX) + 1, -gameStats.yOffset, 7, this->marginTop - 1, WHITE);
+      arduboy.fillRect(this->marginLeft + (x * Constants::GridWidthX) + 1 - this->xOffset, -this->yOffset, 7, this->marginTop - 1, WHITE);
       font3x5.setTextColor(BLACK);
 
       completedRows++;
@@ -105,7 +105,7 @@ void PlayGameState::render(StateMachine & machine) {
 
       if (val != 0) {
       
-        font3x5.setCursor(this->marginLeft + (x * Constants::GridWidthX) + 3 - (val >= 10 ? 3 : (val == 1 ? 1 : 0)), -gameStats.yOffset + y * 7);
+        font3x5.setCursor(this->marginLeft + (x * Constants::GridWidthX) + 3 - (val >= 10 ? 3 : (val == 1 ? 1 : 0)) - this->xOffset, -this->yOffset + y * 7);
 
         font3x5.print(val);
         font3x5.print("\n");
@@ -122,7 +122,7 @@ void PlayGameState::render(StateMachine & machine) {
 
     if (this->puzzle.isRowMatch(y)) {
 
-      arduboy.fillRect(0, this->marginTop + (y * Constants::GridWidthY) + 1 - gameStats.yOffset, this->marginLeft - 1, 7, WHITE);
+      arduboy.fillRect(-this->xOffset, this->marginTop + (y * Constants::GridWidthY) + 1 - this->yOffset, this->marginLeft - 1, 7, WHITE);
       font3x5.setTextColor(BLACK);
 
       completedRows++;
@@ -144,7 +144,7 @@ void PlayGameState::render(StateMachine & machine) {
 
         if (val >= 10) largerThan10++;
 
-        font3x5.setCursor(1 + (x * 5) - (largerThan10 * 2), this->marginTop + (y * Constants::GridWidthY) + 1 - gameStats.yOffset);
+        font3x5.setCursor(1 + (x * 5) - (largerThan10 * 2) - this->xOffset, this->marginTop + (y * Constants::GridWidthY) + 1 - this->yOffset);
         font3x5.print(val);
       }
   
@@ -179,7 +179,8 @@ void PlayGameState::render(StateMachine & machine) {
   else {
 
     if (flash) {
-      arduboy.drawRect(this->marginLeft + (this->puzzle.getX() * Constants::GridWidthX), this->marginTop + (this->puzzle.getY() * Constants::GridWidthY) - gameStats.yOffset, 9, 9);
+      Sprites::drawExternalMask(this->marginLeft + (this->puzzle.getX() * Constants::GridWidthX) - this->xOffset, this->marginTop + (this->puzzle.getY() * Constants::GridWidthY) - this->yOffset, Images::Cursor, Images::Cursor_Mask, 0, 0);
+      arduboy.drawRect(this->marginLeft + (this->puzzle.getX() * Constants::GridWidthX) - this->xOffset, this->marginTop + (this->puzzle.getY() * Constants::GridWidthY) - this->yOffset, 9, 9);
     }
 
   }

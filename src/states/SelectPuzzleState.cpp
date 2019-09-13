@@ -90,7 +90,7 @@ void SelectPuzzleState::update(StateMachine & machine) {
 
 }
 
-void SelectPuzzleState::populatePuzzle(uint8_t puzzleIndex) {
+void SelectPuzzleState::populatePuzzle(uint16_t puzzleIndex) {
 
   uint16_t idx = 0;
   uint8_t maxSeriesRow = 0;

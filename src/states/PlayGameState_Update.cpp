@@ -22,12 +22,25 @@ void PlayGameState::update(StateMachine & machine) {
 
 	if (!this->gameOver) {
 
-		if (this->puzzle.getY() >= 3) {
-			gameStats.yOffset = ((this->puzzle.getY() - 3) * 9);
+		uint8_t xPos = this->marginLeft + (this->puzzle.getX() * Constants::GridWidthX);
+		uint8_t yPos = this->marginTop + (this->puzzle.getY() * Constants::GridWidthY);
+
+		if (xPos >= 119) {
+			this->xOffset = xPos - 119;
 		}
 		else {
-			gameStats.yOffset = 0;
+			this->xOffset = 0;
 		}
+
+		if (yPos >= 55) {
+			this->yOffset = yPos - 55;
+		}
+		else {
+			this->yOffset = 0;
+		}
+Serial.print(xOffset);
+Serial.print(" ");
+Serial.println(yOffset);
 
 		if (justPressed & A_BUTTON) {
 
