@@ -6,7 +6,7 @@ namespace Constants {
   constexpr uint8_t GridWidthY = 8;
   constexpr uint8_t NumberOfNumbers = 8;
 
-  constexpr uint16_t PuzzleStartChar1 = 450;
+  constexpr uint16_t PuzzleStartChar1 = 150;
   constexpr uint16_t PuzzleStartChar2 = PuzzleStartChar1 + 1;
   constexpr uint16_t PuzzleIndex = PuzzleStartChar2 + 1;
   constexpr uint16_t PuzzleWidth = PuzzleIndex + 1;

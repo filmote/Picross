@@ -22,7 +22,7 @@ void SelectPuzzleState::activate(StateMachine & machine) {
 
   if (EEPROM.read(Constants::PuzzlesSolved + this->puzzleIndex) == 1) {
 
-    for (uint8_t x = this->puzzleIndex + 1; x < numberOfImages; x++) {
+    for (uint16_t x = this->puzzleIndex + 1; x < numberOfImages; x++) {
 
       if (EEPROM.read(Constants::PuzzlesSolved + x) == 0) {
 
@@ -219,7 +219,7 @@ void SelectPuzzleState::render(StateMachine & machine) {
 
 	auto & arduboy = machine.getContext().arduboy;
   
-  uint8_t puzzleRange = this->puzzleIndex / 25;
+  uint16_t puzzleRange = this->puzzleIndex / 25;
   uint8_t puzzleIndexMod25 = this->puzzleIndex % 25;
   uint16_t numberOfImages = ArrayLength(Puzzles::puzzles);
 
@@ -242,7 +242,7 @@ void SelectPuzzleState::render(StateMachine & machine) {
     if ((flash && (x == cursorPosition)) || (x != cursorPosition)) {
       Sprites::drawSelfMasked(4 + (xPos * Constants::Select_Spacing), Constants::Select_Top, Images::Box, 0);
     }
-
+Serial.println(Constants::PuzzlesSolved + (puzzleRange * 25) + x);
     if (EEPROM.read(Constants::PuzzlesSolved + (puzzleRange * 25) + x) == 1) {  
       Sprites::drawSelfMasked(4 + (xPos * Constants::Select_Spacing) + 10 - (width / 2), Constants::Select_Top + 10 - (height / 2), pgm_read_word(&Puzzles::puzzles[(puzzleRange * 25) + x]), 0);
     }
