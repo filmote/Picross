@@ -170,10 +170,15 @@ void PlayGameState::render(StateMachine & machine) {
       uint8_t width = pgm_read_byte(&puzzle[0]);
       uint8_t height = pgm_read_byte(&puzzle[1]);
 
-      Sprites::drawExternalMask(16, 20, Images::Congratulations,  Images::Congratulations_Mask, 0, 0);
+      Sprites::drawExternalMask(14, 20, Images::Congratulations,  Images::Congratulations_Mask, 0, 0);
       Sprites::drawSelfMasked(103 - (width / 2), 32 - (height / 2), pgm_read_word(&Puzzles::puzzles[this->puzzle.getPuzzleIndex()]), 0);
 
     }
+
+  }
+  else  if (this->bCount == Constants::BButtonDelay) {
+
+    Sprites::drawExternalMask(16, 20, Images::LeaveGame,  Images::LeaveGame_Mask, 0, 0);
 
   }
   else {

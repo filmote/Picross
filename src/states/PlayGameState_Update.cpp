@@ -20,7 +20,7 @@ void PlayGameState::update(StateMachine & machine) {
 	if ((justPressed & UP_BUTTON) && this->puzzle.getY() > 0)																this->puzzle.decY();
 	if ((justPressed & DOWN_BUTTON) && this->puzzle.getY() < this->puzzle.getSize() - 1)		this->puzzle.incY();
 
-	if (!this->gameOver) {
+	if (!this->gameOver && this->bCount < Constants::BButtonDelay) {
 
 		uint8_t xPos = this->marginLeft + (this->puzzle.getX() * Constants::GridWidthX);
 		uint8_t yPos = this->marginTop + (this->puzzle.getY() * Constants::GridWidthY);
@@ -38,9 +38,6 @@ void PlayGameState::update(StateMachine & machine) {
 		else {
 			this->yOffset = 0;
 		}
-Serial.print(xOffset);
-Serial.print(" ");
-Serial.println(yOffset);
 
 		if (justPressed & A_BUTTON) {
 
@@ -61,39 +58,78 @@ Serial.println(yOffset);
 			
 		}
 
-		if (justPressed & B_BUTTON) {
-
-			GridValue current = this->puzzle.getGrid();
-
-			switch (current) {
-
-				case GridValue::Blank:	
-				case GridValue::Selected:	
-					this->puzzle.setGrid(GridValue::Marked);
-					break;
-
-				case GridValue::Marked:	
-					this->puzzle.setGrid(GridValue::Blank);
-					break;
-					
+		if (pressed & B_BUTTON) {
+			if (this->bCount < Constants::BButtonDelay) {
+				this-bCount++;
 			}
+		}
+
+		if (justPressed & B_BUTTON) {
+			this->bCount = 0;
+		}
+
+		if (arduboy.justReleased(B_BUTTON)) {
+
+			// if (this->bCount >= Constants::BButtonDelay) {
+
+			// 	machine.changeState(GameStateType::SelectPuzzle);
+
+			// }
+			// else {
+
+				GridValue current = this->puzzle.getGrid();
+
+				switch (current) {
+
+					case GridValue::Blank:	
+					case GridValue::Selected:	
+						this->puzzle.setGrid(GridValue::Marked);
+						break;
+
+					case GridValue::Marked:	
+						this->puzzle.setGrid(GridValue::Blank);
+						break;
+						
+				}
+
+			//}
 			
 		}
 
 	}
 	else {
 
-		if (this->counter < 64) {
+		if (this->gameOver) {
 
-			this->counter++;
-			
+			if (this->counter < 64) {
+
+				this->counter++;
+				
+			}
+			else {
+
+				if (justPressed & A_BUTTON) {
+
+					machine.changeState(GameStateType::SelectPuzzle);
+
+				}
+
+			}
+
 		}
-		else {
+
+		if (this->bCount >= Constants::BButtonDelay) {
 
 			if (justPressed & A_BUTTON) {
 
 				machine.changeState(GameStateType::SelectPuzzle);
 
+			}
+
+			if (justPressed & B_BUTTON) {
+			
+				this->bCount = 0;
+			
 			}
 
 		}

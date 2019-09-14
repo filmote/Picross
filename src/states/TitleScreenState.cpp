@@ -23,6 +23,7 @@ void TitleScreenState::update(StateMachine & machine) {
   auto justPressed = arduboy.justPressedButtons();
   auto pressed = arduboy.pressedButtons();
 
+
 	// Restart ?
 
 	if (pressed & DOWN_BUTTON) {
@@ -38,11 +39,6 @@ void TitleScreenState::update(StateMachine & machine) {
 	else {
 		restart = 0;
 	}
-
-
-	// Update counter ..
-
-	if (this->counter < 64) this->counter++;
 
 
 	// Handle other input ..
@@ -61,8 +57,6 @@ void TitleScreenState::render(StateMachine & machine) {
 
 	auto & arduboy = machine.getContext().arduboy;
 
-	Sprites::drawOverwrite(0, -6, Images::TitleScreen, 0);
-
-	if (this->counter == 64) Sprites::drawOverwrite(16, 53, Images::TitleScreen_PressA, 0);
+	Sprites::drawOverwrite(0, 0, Images::TitleScreen, 0);
 	
 }

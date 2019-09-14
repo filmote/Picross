@@ -17,6 +17,7 @@ void PlayGameState::activate(StateMachine & machine) {
 	this->marginTop = 2 + this->maxSeriesCol * 7;
 
 	this->counter = 0;
+	this->bCount = 0;
 	this->gameOver = false;
 
 	this->puzzle.setX(0);

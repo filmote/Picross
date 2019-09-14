@@ -222,10 +222,29 @@ void SelectPuzzleState::render(StateMachine & machine) {
   uint16_t puzzleRange = this->puzzleIndex / 25;
   uint8_t puzzleIndexMod25 = this->puzzleIndex % 25;
   uint16_t numberOfImages = ArrayLength(Puzzles::puzzles);
+  uint8_t completed = 0;
 
   int8_t lowerLimit = (puzzleIndexMod25 - 2 < 0 ? 0 : puzzleIndexMod25 - 2);
   int8_t upperLimit = lowerLimit + 7;
   int8_t cursorPosition = (puzzleIndexMod25 < 2 ? lowerLimit + puzzleIndexMod25 : lowerLimit + 2);
+
+
+  // How many of the current range have been completed?
+
+  for (int8_t x = 0; x < 25; x++) {
+
+    if (EEPROM.read(Constants::PuzzlesSolved + (puzzleRange * 25) + x) == 1) {  
+
+      completed++;
+
+    }
+
+  }
+
+  completed = completed * 4;
+
+  Sprites::drawOverwrite(0, 0, Images::Selector_Top, 0);
+  Sprites::drawOverwrite(0, 48, Images::Selector_Bottom, 0);
 
   bool flash = arduboy.getFrameCountHalf(48);  
 
@@ -242,7 +261,7 @@ void SelectPuzzleState::render(StateMachine & machine) {
     if ((flash && (x == cursorPosition)) || (x != cursorPosition)) {
       Sprites::drawSelfMasked(4 + (xPos * Constants::Select_Spacing), Constants::Select_Top, Images::Box, 0);
     }
-Serial.println(Constants::PuzzlesSolved + (puzzleRange * 25) + x);
+
     if (EEPROM.read(Constants::PuzzlesSolved + (puzzleRange * 25) + x) == 1) {  
       Sprites::drawSelfMasked(4 + (xPos * Constants::Select_Spacing) + 10 - (width / 2), Constants::Select_Top + 10 - (height / 2), pgm_read_word(&Puzzles::puzzles[(puzzleRange * 25) + x]), 0);
     }
@@ -256,16 +275,17 @@ Serial.println(Constants::PuzzlesSolved + (puzzleRange * 25) + x);
 
   }
 
-  arduboy.drawHorizontalDottedLine(0, 128, 12);
-  arduboy.drawHorizontalDottedLine(0, 128, 52);
-
-  font3x5.setCursor(0, 0);
-  font3x5.print("Puzzles ");
+  font3x5.setCursor(42, 0);
   font3x5.print(puzzleRange + 5);
   font3x5.print("x");
   font3x5.print(puzzleRange + 5);
 
-  if (puzzleRange > 0) Sprites::drawSelfMasked(55, 2, Images::ArrowUp, 0);
-  if (puzzleRange < 15) Sprites::drawSelfMasked(63, 2, Images::ArrowDown, 0);
+  font3x5.setCursor(93, 0);
+  if (completed < 100) font3x5.print("0");
+  if (completed < 10)  font3x5.print("0");
+  font3x5.print(completed);
+
+  if (puzzleRange > 0) Sprites::drawSelfMasked(65, 2, Images::ArrowUp, 0);
+  if (puzzleRange < 15) Sprites::drawSelfMasked(73, 2, Images::ArrowDown, 0);
 
 }
