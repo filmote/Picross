@@ -13,7 +13,7 @@ void SelectPuzzleState::activate(StateMachine & machine) {
   (void)machine;
 
   uint16_t numberOfImages = ArrayLength(Puzzles::puzzles);
-  this->puzzleIndex = EEPROM.read(Constants::PuzzleIndex);
+  this->puzzleIndex = Puzzle::getPuzzleIndex();
   uint8_t puzzleIndexMod25 = this->puzzleIndex % 25;
   uint8_t puzzleRange = this->puzzleIndex / 25;
 
@@ -108,9 +108,9 @@ void SelectPuzzleState::populatePuzzle(uint16_t puzzleIndex) {
   uint8_t height = pgm_read_byte(&puzzle[idx++]);
   uint8_t height8 = (height % 8 == 0 ? height / 8 : (height / 8) + 1);
 
-  EEPROM.update(Constants::PuzzleIndex, puzzleIndex);
-  EEPROM.update(Constants::PuzzleWidth, width);
-  EEPROM.update(Constants::PuzzleHeight, height);
+  Puzzle::setPuzzleIndex(puzzleIndex);
+  eeprom_update_byte(Constants::PuzzleWidth, width);
+  eeprom_update_byte(Constants::PuzzleHeight, height);
 
   for (uint16_t y = 0; y < height8; y++){
 
@@ -123,7 +123,7 @@ void SelectPuzzleState::populatePuzzle(uint16_t puzzleIndex) {
         uint8_t val = (data & (1 << z)) > 0 ? static_cast<uint8_t>(GridValue::SelectedInImage) : 0;
         uint16_t memLoc = Constants::PuzzleStart + (y * 8 * width) + (z * width) + x;
 
-        EEPROM.update(memLoc, val);
+        eeprom_update_byte(memLoc, val);
 
       }
 
@@ -166,7 +166,7 @@ void SelectPuzzleState::populatePuzzle(uint16_t puzzleIndex) {
     for (uint8_t z = 0; z < Constants::NumberOfNumbers; z++) {
 
       if (series[z] > 0 && maxSeriesRow < z + 1) maxSeriesRow = z + 1;
-      EEPROM.update(Constants::PuzzleRows + (y * Constants::NumberOfNumbers) + z, series[z]);
+      eeprom_update_byte(Constants::PuzzleRows + (y * Constants::NumberOfNumbers) + z, series[z]);
 
     }
 
@@ -206,14 +206,14 @@ void SelectPuzzleState::populatePuzzle(uint16_t puzzleIndex) {
     for (uint8_t z = 0; z < Constants::NumberOfNumbers; z++){
 
       if (series[z] > 0 && maxSeriesCol < z + 1) maxSeriesCol = z + 1;
-      EEPROM.update(Constants::PuzzleCols + (x * Constants::NumberOfNumbers) + z, series[z]);
+      eeprom_update_byte(Constants::PuzzleCols + (x * Constants::NumberOfNumbers) + z, series[z]);
 
     }
 
   }
 
-  EEPROM.update(Constants::PuzzleMaxRows, maxSeriesRow);
-  EEPROM.update(Constants::PuzzleMaxCols, maxSeriesCol);
+  eeprom_update_byte(Constants::PuzzleMaxRows, maxSeriesRow);
+  eeprom_update_byte(Constants::PuzzleMaxCols, maxSeriesCol);
   
 }
 
@@ -223,6 +223,7 @@ void SelectPuzzleState::populatePuzzle(uint16_t puzzleIndex) {
 //
 void SelectPuzzleState::render(StateMachine & machine) {
 
+Serial.println(Puzzle::getPuzzleIndex());
 	auto & arduboy = machine.getContext().arduboy;
   
   uint16_t puzzleRange = this->puzzleIndex / 25;

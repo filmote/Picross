@@ -26,9 +26,11 @@ uint8_t Puzzle::getSize() {
 
 }
 
-uint8_t Puzzle::getPuzzleIndex() {
+uint16_t Puzzle::getPuzzleIndex() {
 
-  return EEPROM.read(Constants::PuzzleIndex);
+  uint16_t retValue = 0;
+  EEPROM.get(Constants::PuzzleIndex, retValue);
+  return retValue;
 
 }
 
@@ -76,14 +78,14 @@ void Puzzle::setY(uint8_t value) {
 
 void Puzzle::setSize(uint8_t value) {
   
-  EEPROM.update(Constants::PuzzleWidth, value);
-  EEPROM.update(Constants::PuzzleHeight, value);
+  eeprom_update_byte(Constants::PuzzleWidth, value);
+  eeprom_update_byte(Constants::PuzzleHeight, value);
   
 }
 
-void Puzzle::setPuzzleIndex(uint8_t value) {
+void Puzzle::setPuzzleIndex(uint16_t value) {
   
-  EEPROM.update(Constants::PuzzleIndex, value);
+  eeprom_update_word(Constants::PuzzleIndex, value);
   
 }
 
@@ -93,7 +95,7 @@ void Puzzle::setGrid(GridValue value) {
   uint16_t memLoc = Constants::PuzzleStart + (this->y * width) + x;
   uint8_t update = (EEPROM.read(memLoc) & static_cast<uint8_t>(GridValue::SelectedInImage)) | static_cast<uint8_t>(value);
 
-  EEPROM.update(memLoc, static_cast<uint8_t>(update));
+  eeprom_update_byte(memLoc, static_cast<uint8_t>(update));
 
   this->updateRowCols();
 
@@ -103,7 +105,7 @@ void Puzzle::setGrid(uint8_t x, uint8_t y, GridValue value) {
 
   uint8_t width = EEPROM.read(Constants::PuzzleWidth);
 
-  EEPROM.update(Constants::PuzzleStart + (y * width) + x, static_cast<uint8_t>(value));
+  eeprom_update_byte(Constants::PuzzleStart + (y * width) + x, static_cast<uint8_t>(value));
 
   this->updateRowCols();
 
@@ -111,13 +113,13 @@ void Puzzle::setGrid(uint8_t x, uint8_t y, GridValue value) {
 
 void Puzzle::setCol(uint8_t col, uint8_t index, uint8_t value) {
   
-  EEPROM.update(Constants::PuzzleCols + (col * Constants::NumberOfNumbers) + index, value);
+  eeprom_update_byte(Constants::PuzzleCols + (col * Constants::NumberOfNumbers) + index, value);
 
 }
 
 void Puzzle::setRow(uint8_t row, uint8_t index, uint8_t value) {
   
-  EEPROM.update(Constants::PuzzleRows + (row * Constants::NumberOfNumbers) + index, value);
+  eeprom_update_byte(Constants::PuzzleRows + (row * Constants::NumberOfNumbers) + index, value);
 
 }
 

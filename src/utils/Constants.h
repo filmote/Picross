@@ -9,7 +9,7 @@ namespace Constants {
   constexpr uint16_t PuzzleStartChar1 = 150;
   constexpr uint16_t PuzzleStartChar2 = PuzzleStartChar1 + 1;
   constexpr uint16_t PuzzleIndex = PuzzleStartChar2 + 1;
-  constexpr uint16_t PuzzleWidth = PuzzleIndex + 1;
+  constexpr uint16_t PuzzleWidth = PuzzleIndex + 2;
   constexpr uint16_t PuzzleHeight = PuzzleWidth + 1;
   constexpr uint16_t PuzzleMaxRows = PuzzleHeight + 1;
   constexpr uint16_t PuzzleMaxCols = PuzzleMaxRows + 1;

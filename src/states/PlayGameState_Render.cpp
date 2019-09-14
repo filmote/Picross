@@ -7,6 +7,7 @@
 // ---------------------------------------------------------------------------------------------------------------------------
 // 
 void PlayGameState::render(StateMachine & machine) {
+Serial.println(this->puzzle.getPuzzleIndex());
 
   uint8_t const solidLines[] =
    {
@@ -158,7 +159,7 @@ void PlayGameState::render(StateMachine & machine) {
   if (completedRows == 2 * size) {
 
     this->gameOver = true;
-    EEPROM.update(Constants::PuzzlesSolved + this->puzzle.getPuzzleIndex(), 1);
+    eeprom_update_byte(Constants::PuzzlesSolved + this->puzzle.getPuzzleIndex(), 1);
 
   }
 

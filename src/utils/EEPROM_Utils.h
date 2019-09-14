@@ -30,13 +30,13 @@ void EEPROM_Utils::initEEPROM(bool forceClear) {
 
   if (forceClear || c1 != 'P' || c2 != 'C') { 
 
-    const uint16_t score = 0;
+    const uint16_t index = 0;
     eeprom_update_byte(Constants::PuzzleStartChar1, 'P');
     eeprom_update_byte(Constants::PuzzleStartChar2, 'C');
-    eeprom_update_byte(Constants::PuzzleIndex, 0);
+    eeprom_update_word(Constants::PuzzleIndex, index);
 
     for (uint8_t x = 0; x < 255; x++) {
-      EEPROM.update(Constants::PuzzlesSolved + x, 0);
+      eeprom_update_byte(Constants::PuzzlesSolved + x, 0);
     }
 
   }
