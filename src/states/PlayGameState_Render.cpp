@@ -7,7 +7,6 @@
 // ---------------------------------------------------------------------------------------------------------------------------
 // 
 void PlayGameState::render(StateMachine & machine) {
-Serial.println(this->puzzle.getPuzzleIndex());
 
   uint8_t const solidLines[] =
    {
@@ -100,7 +99,7 @@ Serial.println(this->puzzle.getPuzzleIndex());
 
     }
 
-    for (uint8_t y = 0; y < 5; y++) {
+    for (uint8_t y = 0; y < Constants::NumberOfNumbers; y++) {
 
       uint8_t val = this->puzzle.getCol(x, y);
 
@@ -137,7 +136,7 @@ Serial.println(this->puzzle.getPuzzleIndex());
     
     uint8_t largerThan10 = 0;
 
-    for (uint8_t x = 0; x < 5; x++) {
+    for (uint8_t x = 0; x < Constants::NumberOfNumbers; x++) {
       
       uint8_t val = this->puzzle.getRow(y, x);
 

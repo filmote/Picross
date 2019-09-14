@@ -223,7 +223,6 @@ void SelectPuzzleState::populatePuzzle(uint16_t puzzleIndex) {
 //
 void SelectPuzzleState::render(StateMachine & machine) {
 
-Serial.println(Puzzle::getPuzzleIndex());
 	auto & arduboy = machine.getContext().arduboy;
   
   uint16_t puzzleRange = this->puzzleIndex / 25;
