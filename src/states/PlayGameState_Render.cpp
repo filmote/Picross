@@ -171,7 +171,7 @@ void PlayGameState::render(StateMachine & machine) {
       uint8_t height = pgm_read_byte(&puzzle[1]);
 
       Sprites::drawExternalMask(14, 20, Images::Congratulations,  Images::Congratulations_Mask, 0, 0);
-      Sprites::drawSelfMasked(103 - (width / 2), 32 - (height / 2), pgm_read_word(&Puzzles::puzzles[this->puzzle.getPuzzleIndex()]), 0);
+      Sprites::drawSelfMasked(101 - (width / 2), 32 - (height / 2), pgm_read_word(&Puzzles::puzzles[this->puzzle.getPuzzleIndex()]), 0);
 
     }
 

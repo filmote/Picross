@@ -31,8 +31,9 @@ class PlayGameState : public BaseState {
     uint8_t counter = 0;
     uint8_t xOffset = 0;
     uint8_t yOffset = 0;
-    uint8_t bCount = 0;
 
+    uint8_t bCount = 0;
+    GridValue lastUpdate = GridValue::Blank;
 };
 
 

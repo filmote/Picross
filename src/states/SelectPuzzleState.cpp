@@ -83,13 +83,19 @@ void SelectPuzzleState::update(StateMachine & machine) {
 
   if (justPressed & A_BUTTON) {
 
-    this->populatePuzzle(this->puzzleIndex);
+    if (EEPROM.read(Constants::PuzzleIndex) != this->puzzleIndex) {
+      this->populatePuzzle(this->puzzleIndex);
+    }
  		machine.changeState(GameStateType::PlayGame); 
 
   }
 
 }
 
+
+// ----------------------------------------------------------------------------
+//  Render out a puxxle .. 
+//
 void SelectPuzzleState::populatePuzzle(uint16_t puzzleIndex) {
 
   uint16_t idx = 0;

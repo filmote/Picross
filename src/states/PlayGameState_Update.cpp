@@ -15,10 +15,33 @@ void PlayGameState::update(StateMachine & machine) {
 
 	// Normal play ..
 
-	if ((justPressed & LEFT_BUTTON) && this->puzzle.getX() > 0)															this->puzzle.decX();
-	if ((justPressed & RIGHT_BUTTON) && this->puzzle.getX() < this->puzzle.getSize() - 1)		this->puzzle.incX();
-	if ((justPressed & UP_BUTTON) && this->puzzle.getY() > 0)																this->puzzle.decY();
-	if ((justPressed & DOWN_BUTTON) && this->puzzle.getY() < this->puzzle.getSize() - 1)		this->puzzle.incY();
+	if ((justPressed & LEFT_BUTTON) && this->puzzle.getX() > 0)	{
+	
+		this->puzzle.decX();
+		if (!(justPressed & A_BUTTON) && (pressed & A_BUTTON)) { this->puzzle.setGrid(this->lastUpdate); }
+
+	}
+
+	if ((justPressed & RIGHT_BUTTON) && this->puzzle.getX() < this->puzzle.getSize() - 1) {
+
+		this->puzzle.incX();
+		if (!(justPressed & A_BUTTON) && (pressed & A_BUTTON)) { this->puzzle.setGrid(this->lastUpdate); }
+
+	}
+
+	if ((justPressed & UP_BUTTON) && this->puzzle.getY() > 0)	{
+
+		this->puzzle.decY();
+		if (!(justPressed & A_BUTTON) && (pressed & A_BUTTON)) { this->puzzle.setGrid(this->lastUpdate); }
+
+	}
+
+	if ((justPressed & DOWN_BUTTON) && this->puzzle.getY() < this->puzzle.getSize() - 1) {
+
+		this->puzzle.incY();
+		if (!(justPressed & A_BUTTON) && (pressed & A_BUTTON)) { this->puzzle.setGrid(this->lastUpdate); }
+
+	}
 
 	if (!this->gameOver && this->bCount < Constants::BButtonDelay) {
 
@@ -48,10 +71,12 @@ void PlayGameState::update(StateMachine & machine) {
 				case GridValue::Blank:	
 				case GridValue::Marked:	
 					this->puzzle.setGrid(GridValue::Selected);
+					this->lastUpdate = GridValue::Selected;
 					break;
 
 				case GridValue::Selected:	
 					this->puzzle.setGrid(GridValue::Blank);
+					this->lastUpdate = GridValue::Blank;
 					break;
 					
 			}
