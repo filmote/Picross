@@ -8,7 +8,6 @@
 void PlayGameState::update(StateMachine & machine) {
 
 	auto & arduboy = machine.getContext().arduboy;
-	auto & gameStats = machine.getContext().gameStats;
 	auto justPressed = arduboy.justPressedButtons();
 	auto pressed = arduboy.pressedButtons();
 
@@ -79,13 +78,15 @@ void PlayGameState::update(StateMachine & machine) {
 					this->lastUpdate = GridValue::Blank;
 					break;
 					
+				default: break;
+
 			}
 			
 		}
 
 		if (pressed & B_BUTTON) {
 			if (this->bCount < Constants::BButtonDelay) {
-				this-bCount++;
+				this->bCount++;
 			}
 		}
 
@@ -95,29 +96,23 @@ void PlayGameState::update(StateMachine & machine) {
 
 		if (arduboy.justReleased(B_BUTTON)) {
 
-			// if (this->bCount >= Constants::BButtonDelay) {
 
-			// 	machine.changeState(GameStateType::SelectPuzzle);
+			GridValue current = this->puzzle.getGrid();
 
-			// }
-			// else {
+			switch (current) {
 
-				GridValue current = this->puzzle.getGrid();
+				case GridValue::Blank:	
+				case GridValue::Selected:	
+					this->puzzle.setGrid(GridValue::Marked);
+					break;
 
-				switch (current) {
-
-					case GridValue::Blank:	
-					case GridValue::Selected:	
-						this->puzzle.setGrid(GridValue::Marked);
-						break;
-
-					case GridValue::Marked:	
-						this->puzzle.setGrid(GridValue::Blank);
-						break;
-						
-				}
-
-			//}
+				case GridValue::Marked:	
+					this->puzzle.setGrid(GridValue::Blank);
+					break;
+										
+				default: break;
+					
+			}
 			
 		}
 
