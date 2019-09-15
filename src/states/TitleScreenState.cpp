@@ -9,7 +9,7 @@ constexpr const static uint8_t UPLOAD_DELAY = 16;
 //
 void TitleScreenState::activate(StateMachine & machine) {
 
-	auto & gameStats = machine.getContext().gameStats;
+	(void)machine;
 
 }
 
@@ -55,7 +55,7 @@ void TitleScreenState::update(StateMachine & machine) {
 //
 void TitleScreenState::render(StateMachine & machine) {
 
-	auto & arduboy = machine.getContext().arduboy;
+	(void)machine;
 
 	Sprites::drawOverwrite(0, 0, Images::TitleScreen, 0);
 	

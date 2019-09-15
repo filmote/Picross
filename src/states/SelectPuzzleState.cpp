@@ -109,8 +109,8 @@ void SelectPuzzleState::populatePuzzle(uint16_t puzzleIndex) {
   uint8_t height8 = (height % 8 == 0 ? height / 8 : (height / 8) + 1);
 
   Puzzle::setPuzzleIndex(puzzleIndex);
-  eeprom_update_byte(Constants::PuzzleWidth, width);
-  eeprom_update_byte(Constants::PuzzleHeight, height);
+  eeprom_update_byte(reinterpret_cast<uint8_t *>(Constants::PuzzleWidth), width);
+  eeprom_update_byte(reinterpret_cast<uint8_t *>(Constants::PuzzleHeight), height);
 
   for (uint16_t y = 0; y < height8; y++){
 
@@ -123,7 +123,7 @@ void SelectPuzzleState::populatePuzzle(uint16_t puzzleIndex) {
         uint8_t val = (data & (1 << z)) > 0 ? static_cast<uint8_t>(GridValue::SelectedInImage) : 0;
         uint16_t memLoc = Constants::PuzzleStart + (y * 8 * width) + (z * width) + x;
 
-        eeprom_update_byte(memLoc, val);
+        eeprom_update_byte(reinterpret_cast<uint8_t *>(memLoc), val);
 
       }
 
@@ -144,7 +144,7 @@ void SelectPuzzleState::populatePuzzle(uint16_t puzzleIndex) {
 
     for (uint8_t x = 0; x < width; x++){
 
-      uint8_t data = EEPROM.read(Constants::PuzzleStart + (y * width) + x);
+      uint8_t data = eeprom_read_byte(reinterpret_cast<uint8_t *>(Constants::PuzzleStart + (y * width) + x));
 
       if (lastData != data) {
 
@@ -166,7 +166,7 @@ void SelectPuzzleState::populatePuzzle(uint16_t puzzleIndex) {
     for (uint8_t z = 0; z < Constants::NumberOfNumbers; z++) {
 
       if (series[z] > 0 && maxSeriesRow < z + 1) maxSeriesRow = z + 1;
-      eeprom_update_byte(Constants::PuzzleRows + (y * Constants::NumberOfNumbers) + z, series[z]);
+      eeprom_update_byte(reinterpret_cast<uint8_t *>(Constants::PuzzleRows + (y * Constants::NumberOfNumbers) + z), series[z]);
 
     }
 
@@ -185,7 +185,7 @@ void SelectPuzzleState::populatePuzzle(uint16_t puzzleIndex) {
 
     for (uint8_t y = 0; y < height; y++){
 
-      uint8_t data = EEPROM.read(Constants::PuzzleStart + (y * width) + x);
+      uint8_t data = eeprom_read_byte(reinterpret_cast<uint8_t *>(Constants::PuzzleStart + (y * width) + x));
 
       if (lastData != data) {
 
@@ -206,14 +206,14 @@ void SelectPuzzleState::populatePuzzle(uint16_t puzzleIndex) {
     for (uint8_t z = 0; z < Constants::NumberOfNumbers; z++){
 
       if (series[z] > 0 && maxSeriesCol < z + 1) maxSeriesCol = z + 1;
-      eeprom_update_byte(Constants::PuzzleCols + (x * Constants::NumberOfNumbers) + z, series[z]);
+      eeprom_update_byte(reinterpret_cast<uint8_t *>(Constants::PuzzleCols + (x * Constants::NumberOfNumbers) + z), series[z]);
 
     }
 
   }
 
-  eeprom_update_byte(Constants::PuzzleMaxRows, maxSeriesRow);
-  eeprom_update_byte(Constants::PuzzleMaxCols, maxSeriesCol);
+  eeprom_update_byte(reinterpret_cast<uint8_t *>(Constants::PuzzleMaxRows), maxSeriesRow);
+  eeprom_update_byte(reinterpret_cast<uint8_t *>(Constants::PuzzleMaxCols), maxSeriesCol);
   
 }
 
@@ -227,7 +227,6 @@ void SelectPuzzleState::render(StateMachine & machine) {
   
   uint16_t puzzleRange = this->puzzleIndex / 25;
   uint8_t puzzleIndexMod25 = this->puzzleIndex % 25;
-  uint16_t numberOfImages = ArrayLength(Puzzles::puzzles);
   uint8_t completed = 0;
 
   int8_t lowerLimit = (puzzleIndexMod25 - 2 < 0 ? 0 : puzzleIndexMod25 - 2);
