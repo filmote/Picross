@@ -14,17 +14,24 @@ void SelectPuzzleState::activate(StateMachine & machine) {
 
   uint16_t numberOfImages = ArrayLength(Puzzles::puzzles);
   this->puzzleIndex = Puzzle::getPuzzleIndex();
-  uint8_t puzzleIndexMod25 = this->puzzleIndex % 25;
-  uint8_t puzzleRange = this->puzzleIndex / 25;
+
+
+  // If the current puzzle is equal to 0 and there are no dimensions, it is probably time to flash the memory with a puzzle ..
+
+  if (eeprom_read_byte(reinterpret_cast<uint8_t *>(Constants::PuzzleHeight)) == 0) {
+
+    this->populatePuzzle(0);
+
+  }
 
 
   // If the current puzzle has been completed, then look for the next unfinished puzzle ..
 
-  if (EEPROM.read(Constants::PuzzlesSolved + this->puzzleIndex) == 1) {
+  if (eeprom_read_byte(reinterpret_cast<uint8_t *>(Constants::PuzzlesSolved + this->puzzleIndex)) == 1) {
 
     for (uint16_t x = this->puzzleIndex + 1; x < numberOfImages; x++) {
 
-      if (EEPROM.read(Constants::PuzzlesSolved + x) == 0) {
+      if (eeprom_read_byte(reinterpret_cast<uint8_t *>(Constants::PuzzlesSolved + x)) == 0) {
 
         this->puzzleIndex = x;
         break;
@@ -46,7 +53,6 @@ void SelectPuzzleState::update(StateMachine & machine) {
 	auto & arduboy = machine.getContext().arduboy;
 	auto justPressed = arduboy.justPressedButtons();
 
-  uint16_t numberOfImages = ArrayLength(Puzzles::puzzles);
   uint8_t puzzleIndexMod25 = this->puzzleIndex % 25;
   uint8_t puzzleRange = this->puzzleIndex / 25;
 
@@ -83,7 +89,7 @@ void SelectPuzzleState::update(StateMachine & machine) {
 
   if (justPressed & A_BUTTON) {
 
-    if (EEPROM.read(Constants::PuzzleIndex) != this->puzzleIndex) {
+    if (eeprom_read_byte(reinterpret_cast<uint8_t *>(Constants::PuzzleIndex)) != this->puzzleIndex) {
       this->populatePuzzle(this->puzzleIndex);
     }
  		machine.changeState(GameStateType::PlayGame); 
@@ -229,16 +235,16 @@ void SelectPuzzleState::render(StateMachine & machine) {
   uint8_t puzzleIndexMod25 = this->puzzleIndex % 25;
   uint8_t completed = 0;
 
-  int8_t lowerLimit = (puzzleIndexMod25 - 2 < 0 ? 0 : puzzleIndexMod25 - 2);
-  int8_t upperLimit = lowerLimit + 7;
-  int8_t cursorPosition = (puzzleIndexMod25 < 2 ? lowerLimit + puzzleIndexMod25 : lowerLimit + 2);
+  int8_t lowerLimit = (puzzleIndexMod25 - 2 < 0 ? 0 : (puzzleIndexMod25 >= 22 ? 20 : puzzleIndexMod25 - 2));
+  int8_t upperLimit = (lowerLimit + 5 <= 25 ? lowerLimit + 5 : 25);
+  int8_t cursorPosition = (puzzleIndexMod25 < 2 ? lowerLimit + puzzleIndexMod25 : (puzzleIndexMod25 > 22 ? lowerLimit + puzzleIndexMod25 - 20 : lowerLimit + 2));
 
 
   // How many of the current range have been completed?
 
   for (int8_t x = 0; x < 25; x++) {
 
-    if (EEPROM.read(Constants::PuzzlesSolved + (puzzleRange * 25) + x) == 1) {  
+    if (eeprom_read_byte(reinterpret_cast<uint8_t *>(Constants::PuzzlesSolved + (puzzleRange * 25) + x)) == 1) {  
 
       completed++;
 
@@ -257,7 +263,6 @@ void SelectPuzzleState::render(StateMachine & machine) {
 
     uint8_t xPos = x - lowerLimit;
 
-
     const uint8_t *puzzle = pgm_read_word_near(&Puzzles::puzzles[(puzzleRange * 25) + x]);
 
     uint8_t width = pgm_read_byte(&puzzle[0]);
@@ -267,7 +272,7 @@ void SelectPuzzleState::render(StateMachine & machine) {
       Sprites::drawSelfMasked(4 + (xPos * Constants::Select_Spacing), Constants::Select_Top, Images::Box, 0);
     }
 
-    if (EEPROM.read(Constants::PuzzlesSolved + (puzzleRange * 25) + x) == 1) {  
+    if (eeprom_read_byte(reinterpret_cast<uint8_t *>(Constants::PuzzlesSolved + (puzzleRange * 25) + x)) == 1) {  
       Sprites::drawSelfMasked(4 + (xPos * Constants::Select_Spacing) + 10 - (width / 2), Constants::Select_Top + 10 - (height / 2), pgm_read_word(&Puzzles::puzzles[(puzzleRange * 25) + x]), 0);
     }
     else {

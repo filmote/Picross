@@ -11,8 +11,6 @@ class BaseState : public GameState<GameContext, GameStateType> {
 
     Font3x5 font3x5 = Font3x5();
 
-    void drawMessageBox(StateMachine & machine, String message, uint8_t lines, uint8_t left, uint8_t width);
-
 	private:
    
 };

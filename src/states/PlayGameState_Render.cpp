@@ -50,7 +50,7 @@ void PlayGameState::render(StateMachine & machine) {
 
     }
 
-    arduboy.drawVerticalDottedLine(0, this->marginTop + (size * Constants::GridWidthY) - this->yOffset, this->marginLeft + (x * Constants::GridWidthX));  
+    arduboy.drawVerticalDottedLine(0, this->marginTop + (size * Constants::GridWidthY) - this->yOffset, this->marginLeft + (x * Constants::GridWidthX) - this->xOffset);  
     arduboy.drawHorizontalDottedLine(0, this->marginLeft + (size * Constants::GridWidthX), this->marginTop + (x * Constants::GridWidthY) - this->yOffset);  
 
   }

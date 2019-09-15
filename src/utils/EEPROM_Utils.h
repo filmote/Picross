@@ -25,18 +25,20 @@ class EEPROM_Utils {
  */
 void EEPROM_Utils::initEEPROM(bool forceClear) {
 
-  byte c1 = eeprom_read_byte(Constants::PuzzleStartChar1);
-  byte c2 = eeprom_read_byte(Constants::PuzzleStartChar2);
+  byte c1 = eeprom_read_byte(reinterpret_cast<uint8_t *>(Constants::PuzzleStartChar1));
+  byte c2 = eeprom_read_byte(reinterpret_cast<uint8_t *>(Constants::PuzzleStartChar2));
 
   if (forceClear || c1 != 'P' || c2 != 'C') { 
 
     const uint16_t index = 0;
-    eeprom_update_byte(Constants::PuzzleStartChar1, 'P');
-    eeprom_update_byte(Constants::PuzzleStartChar2, 'C');
-    eeprom_update_word(Constants::PuzzleIndex, index);
+    eeprom_update_byte(reinterpret_cast<uint8_t *>(Constants::PuzzleStartChar1), 'P');
+    eeprom_update_byte(reinterpret_cast<uint8_t *>(Constants::PuzzleStartChar2), 'C');
+    eeprom_update_byte(reinterpret_cast<uint8_t *>(Constants::PuzzleWidth), 0);
+    eeprom_update_byte(reinterpret_cast<uint8_t *>(Constants::PuzzleHeight), 0);
+    eeprom_update_word(reinterpret_cast<uint16_t *>(Constants::PuzzleIndex), index);
 
-    for (uint8_t x = 0; x < 255; x++) {
-      eeprom_update_byte(Constants::PuzzlesSolved + x, 0);
+    for (uint16_t x = 0; x < 12 * 25; x++) {
+      eeprom_update_byte(reinterpret_cast<uint8_t *>(Constants::PuzzlesSolved + x), 0);
     }
 
   }

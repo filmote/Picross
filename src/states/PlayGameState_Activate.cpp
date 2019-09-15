@@ -10,8 +10,8 @@ void PlayGameState::activate(StateMachine & machine) {
 	auto & arduboy = machine.getContext().arduboy;
 	auto & gameStats = machine.getContext().gameStats;
 
-  this->maxSeriesRow = EEPROM.read(Constants::PuzzleMaxRows);
-  this->maxSeriesCol = EEPROM.read(Constants::PuzzleMaxCols);
+  this->maxSeriesRow = eeprom_read_byte(reinterpret_cast<uint8_t *>(Constants::PuzzleMaxRows));
+  this->maxSeriesCol = eeprom_read_byte(reinterpret_cast<uint8_t *>(Constants::PuzzleMaxCols));
 
 	this->marginLeft = 3 + this->maxSeriesRow * 5;
 	this->marginTop = 2 + this->maxSeriesCol * 7;
