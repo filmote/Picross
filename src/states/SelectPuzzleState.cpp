@@ -3,6 +3,7 @@
 #include "../utils/Constants.h"
 #include "../utils/Arduboy2Ext.h"
 #include "../images/Images.h"
+#include "../entities/Puzzle.h"
 
 
 // ----------------------------------------------------------------------------
@@ -276,7 +277,7 @@ void SelectPuzzleState::render(StateMachine & machine) {
       Sprites::drawSelfMasked(4 + (xPos * Constants::Select_Spacing) + 10 - (width / 2), Constants::Select_Top + 10 - (height / 2), pgm_read_word(&Puzzles::puzzles[(puzzleRange * 25) + x]), 0);
     }
     else {
-      Sprites::drawSelfMasked(4 + (xPos * Constants::Select_Spacing), Constants::Select_Top, Images::QuestionMark, 0);
+      Sprites::drawSelfMasked(10 + (xPos * Constants::Select_Spacing), Constants::Select_Top, Images::QuestionMark, 0);
     }
 
     font3x5.setCursor(4 + (xPos * Constants::Select_Spacing) + 7, Constants::Select_Label);

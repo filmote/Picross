@@ -57,6 +57,12 @@ void TitleScreenState::render(StateMachine & machine) {
 
 	(void)machine;
 
-	Sprites::drawOverwrite(0, 0, Images::TitleScreen, 0);
-	
+	Sprites::drawOverwrite(3, 4, Images::TitleScreen_Top, 0);
+	Sprites::drawOverwrite(3, 3, Images::TitleScreen_Top, 0);
+
+	Sprites::drawOverwrite(16, 25, Images::TitleScreen_Middle, 0);
+
+	Sprites::drawOverwrite(27, 45, Images::TitleScreen_Bottom, 0);
+	Sprites::drawOverwrite(27, 44, Images::TitleScreen_Bottom, 0);
+
 }

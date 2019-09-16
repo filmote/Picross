@@ -30,7 +30,6 @@ void PlayGameState::render(StateMachine & machine) {
    };
 
 	auto & arduboy = machine.getContext().arduboy;
-  auto & gameStats = machine.getContext().gameStats;
 
   bool flash = arduboy.getFrameCountHalf(48);  
   uint8_t size = this->puzzle.getSize();
@@ -178,7 +177,7 @@ void PlayGameState::render(StateMachine & machine) {
   }
   else  if (this->bCount == Constants::BButtonDelay) {
 
-    Sprites::drawExternalMask(16, 20, Images::LeaveGame,  Images::LeaveGame_Mask, 0, 0);
+    Sprites::drawExternalMask(14, 20, Images::LeaveGame,  Images::Congratulations_Mask, 0, 0);
 
   }
   else {

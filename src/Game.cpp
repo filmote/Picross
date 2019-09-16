@@ -93,17 +93,6 @@ void Game::loop(void) {
 			this->playGameState.render(*this);
 			break;
 
-		case GameStateType::GameOver: 
-
-			if (currentState != savedCurrentState) {
-				this->context.gameState = this->currentState;
-				this->gameOverState.activate(*this);
-				this->savedCurrentState = this->currentState;
-			}
-			this->gameOverState.update(*this);
-			this->gameOverState.render(*this);
-			break;
-
 		default: break;	
 
 	}

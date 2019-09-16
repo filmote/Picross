@@ -20,7 +20,6 @@
 
 #include "Arduboy2Ext.h"
 #include "Enums.h"
-#include "GameStats.h"
 
 class GameContext {
 
@@ -28,7 +27,6 @@ class GameContext {
 
     GameStateType gameState;
     Arduboy2Ext arduboy;
-    GameStats gameStats;
 
     GameContext();
     void resetGame();

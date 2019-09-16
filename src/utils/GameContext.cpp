@@ -20,11 +20,3 @@
 #include "Utils.h"
 
 GameContext::GameContext() { }
-
-void GameContext::resetGame() {
-
-  this->gameStats.resetGame();
-
-}
-
-

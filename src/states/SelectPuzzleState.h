@@ -3,6 +3,7 @@
 #include "../utils/GameContext.h"
 #include "../utils/GameState.h"
 #include "../utils/Enums.h"
+#include "../entities/Puzzle.h"
 #include "BaseState.h"
 
 class SelectPuzzleState : public BaseState {
