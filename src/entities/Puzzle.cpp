@@ -124,24 +124,36 @@ void Puzzle::setRow(uint8_t row, uint8_t index, uint8_t value) {
 
 void Puzzle::incX() {
   
+  uint8_t width = eeprom_read_byte(reinterpret_cast<uint8_t *>(Constants::PuzzleWidth));
+
   this->x++;
+  if (this->x == width) this->x = 0;
   
 }
 
 void Puzzle::decX() {
-  
+    
+  uint8_t width = eeprom_read_byte(reinterpret_cast<uint8_t *>(Constants::PuzzleWidth));
+
+  if (this->x == 0) this->x = width;
   this->x--;
   
 }
 
 void Puzzle::incY() {
+    
+  uint8_t height = eeprom_read_byte(reinterpret_cast<uint8_t *>(Constants::PuzzleHeight));
   
   this->y++;
+  if (this->y == height) this->y = 0;
   
 }
 
 void Puzzle::decY() {
+    
+  uint8_t height = eeprom_read_byte(reinterpret_cast<uint8_t *>(Constants::PuzzleHeight));
   
+  if (this->y == 0) this->y = height;
   this->y--;
   
 }

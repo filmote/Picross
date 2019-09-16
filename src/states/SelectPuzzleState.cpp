@@ -93,6 +93,15 @@ void SelectPuzzleState::update(StateMachine & machine) {
     if (eeprom_read_byte(reinterpret_cast<uint8_t *>(Constants::PuzzleIndex)) != this->puzzleIndex) {
       this->populatePuzzle(this->puzzleIndex);
     }
+    else {
+
+      if (eeprom_read_byte(reinterpret_cast<uint8_t *>(Constants::PuzzlesSolved + this->puzzleIndex)) == 1) {
+        eeprom_update_byte(Constants::PuzzlesSolved + this->puzzleIndex, 0);
+        this->populatePuzzle(this->puzzleIndex);
+      }
+
+    }
+
  		machine.changeState(GameStateType::PlayGame); 
 
   }

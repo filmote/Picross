@@ -14,28 +14,32 @@ void PlayGameState::update(StateMachine & machine) {
 
 	// Normal play ..
 
-	if ((justPressed & LEFT_BUTTON) && this->puzzle.getX() > 0)	{
+//	if ((justPressed & LEFT_BUTTON) && this->puzzle.getX() > 0)	{
+	if (justPressed & LEFT_BUTTON)	{
 	
 		this->puzzle.decX();
 		if (!(justPressed & A_BUTTON) && (pressed & A_BUTTON)) { this->puzzle.setGrid(this->lastUpdate); }
 
 	}
 
-	if ((justPressed & RIGHT_BUTTON) && this->puzzle.getX() < this->puzzle.getSize() - 1) {
+//	if ((justPressed & RIGHT_BUTTON) && this->puzzle.getX() < this->puzzle.getSize() - 1) {
+	if (justPressed & RIGHT_BUTTON) {
 
 		this->puzzle.incX();
 		if (!(justPressed & A_BUTTON) && (pressed & A_BUTTON)) { this->puzzle.setGrid(this->lastUpdate); }
 
 	}
 
-	if ((justPressed & UP_BUTTON) && this->puzzle.getY() > 0)	{
+//	if ((justPressed & UP_BUTTON) && this->puzzle.getY() > 0)	{
+	if (justPressed & UP_BUTTON)	{
 
 		this->puzzle.decY();
 		if (!(justPressed & A_BUTTON) && (pressed & A_BUTTON)) { this->puzzle.setGrid(this->lastUpdate); }
 
 	}
 
-	if ((justPressed & DOWN_BUTTON) && this->puzzle.getY() < this->puzzle.getSize() - 1) {
+//	if ((justPressed & DOWN_BUTTON) && this->puzzle.getY() < this->puzzle.getSize() - 1) {
+	if (justPressed & DOWN_BUTTON) {
 
 		this->puzzle.incY();
 		if (!(justPressed & A_BUTTON) && (pressed & A_BUTTON)) { this->puzzle.setGrid(this->lastUpdate); }
