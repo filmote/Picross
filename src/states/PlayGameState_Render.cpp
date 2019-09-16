@@ -143,7 +143,7 @@ void PlayGameState::render(StateMachine & machine) {
 
         if (val >= 10) largerThan10++;
 
-        font3x5.setCursor(1 + (x * 5) - (largerThan10 * 2) - this->xOffset, this->marginTop + (y * Constants::GridWidthY) + 1 - this->yOffset);
+        font3x5.setCursor(1 + (x * 5) - (val == 1 ? 1 : 0) - this->xOffset, this->marginTop + (y * Constants::GridWidthY) + 1 - this->yOffset);
         font3x5.print(val);
       }
   
@@ -157,7 +157,7 @@ void PlayGameState::render(StateMachine & machine) {
   if (completedRows == 2 * size) {
 
     this->gameOver = true;
-    eeprom_update_byte(Constants::PuzzlesSolved + this->puzzle.getPuzzleIndex(), 1);
+    eeprom_update_byte(reinterpret_cast<uint8_t *>(Constants::PuzzlesSolved + this->puzzle.getPuzzleIndex()), 1);
 
   }
 

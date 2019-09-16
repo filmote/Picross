@@ -90,13 +90,13 @@ void SelectPuzzleState::update(StateMachine & machine) {
 
   if (justPressed & A_BUTTON) {
 
-    if (eeprom_read_byte(reinterpret_cast<uint8_t *>(Constants::PuzzleIndex)) != this->puzzleIndex) {
+    if (eeprom_read_word(reinterpret_cast<uint16_t *>(Constants::PuzzleIndex)) != this->puzzleIndex) {
       this->populatePuzzle(this->puzzleIndex);
     }
     else {
 
       if (eeprom_read_byte(reinterpret_cast<uint8_t *>(Constants::PuzzlesSolved + this->puzzleIndex)) == 1) {
-        eeprom_update_byte(Constants::PuzzlesSolved + this->puzzleIndex, 0);
+        eeprom_update_byte(reinterpret_cast<uint8_t *>(Constants::PuzzlesSolved + this->puzzleIndex), 0);
         this->populatePuzzle(this->puzzleIndex);
       }
 
@@ -306,6 +306,6 @@ void SelectPuzzleState::render(StateMachine & machine) {
   font3x5.print(completed);
 
   if (puzzleRange > 0) Sprites::drawSelfMasked(65, 2, Images::ArrowUp, 0);
-  if (puzzleRange < 15) Sprites::drawSelfMasked(73, 2, Images::ArrowDown, 0);
+  if (puzzleRange < 11) Sprites::drawSelfMasked(73, 2, Images::ArrowDown, 0);
 
 }
